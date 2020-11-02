@@ -7,9 +7,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ca.bc.gov.educ.api.school.model.dto.School;
+import ca.bc.gov.educ.api.school.model.entity.SchoolEntity;
 import ca.bc.gov.educ.api.school.model.transformer.SchoolTransformer;
 import ca.bc.gov.educ.api.school.repository.SchoolRepository;
 
@@ -26,15 +30,19 @@ public class SchoolService {
 
      /**
      * Get all Schools in School DTO
+     * @param pageSize 
+     * @param pageNo 
      *
      * @return Course 
      * @throws java.lang.Exception
      */
-    public List<School> getSchoolList() {
+    public List<School> getSchoolList(Integer pageNo, Integer pageSize) {
         List<School> schoolList  = new ArrayList<School>();
 
         try {
-        	schoolList = schoolTransformer.transformToDTO(schoolRepository.findAll());            
+        	Pageable paging = PageRequest.of(pageNo, pageSize);        	 
+            Page<SchoolEntity> pagedResult = schoolRepository.findAll(paging);
+        	schoolList = schoolTransformer.transformToDTO(pagedResult.getContent());            
         } catch (Exception e) {
             logger.debug("Exception:" + e);
         }
