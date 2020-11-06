@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @Immutable
 @Entity
-@Table(name = "TAB_SCHOOL")
+@Table(name = "TAB_DISTRICT")
 public class DistrictEntity {
    
 	@Id
