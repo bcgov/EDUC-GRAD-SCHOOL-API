@@ -62,4 +62,8 @@ public class SchoolService {
 
         return schoolList;
     }
+
+	public School getSchoolDetails(String minCode) {
+		return schoolTransformer.transformToDTO(schoolRepository.findById(minCode));
+	}
 }
