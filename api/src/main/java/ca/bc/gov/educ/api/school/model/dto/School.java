@@ -18,8 +18,10 @@ public class School {
     private String address1;    
     private String address2;    
     private String city;    
-    private String provCode;    
-    private String countryCode;    
+    private String provCode; 
+    private String provinceName;
+    private String countryCode; 
+    private String countryName;
     private String postal;
     
 	@Override
@@ -28,11 +30,7 @@ public class School {
 				+ ", transcriptEligibility=" + transcriptEligibility + ", certificateEligibility="
 				+ certificateEligibility + ", independentDesignation=" + independentDesignation + ", mailerType="
 				+ mailerType + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", provCode="
-				+ provCode + ", countryCode=" + countryCode + ", postal=" + postal + "]";
-	}
-    
-    
-	
-    
-    
+				+ provCode + ", provinceName=" + provinceName + ", countryCode=" + countryCode + ", countryName="
+				+ countryName + ", postal=" + postal + "]";
+	}    
 }

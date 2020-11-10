@@ -21,4 +21,7 @@ public class EducSchoolApiConstants {
     public static final String DEFAULT_DATE_FORMAT = "dd-MMM-yyyy";
     
     public static final String TRAX_DATE_FORMAT = "yyyyMM";
+    
+    public static final String ENDPOINT_COUNTRY_BY_COUNTRY_CODE_URL = "${endpoint.code-api.country.country-by-country-code.url}";
+    public static final String ENDPOINT_PROVINCE_BY_PROV_CODE_URL = "${endpoint.code-api.province.province-by-prov-code.url}";
 }
