@@ -35,8 +35,8 @@ public class SchoolController {
     }
     
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_BY_CODE_MAPPING)
-    public School getPSIDetails(@PathVariable String minCode) { 
-    	logger.debug("getPSIDetails : ");
+    public School getSchoolDetails(@PathVariable String minCode) { 
+    	logger.debug("getSchoolDetails : ");
         return schoolService.getSchoolDetails(minCode);
     }
 }
