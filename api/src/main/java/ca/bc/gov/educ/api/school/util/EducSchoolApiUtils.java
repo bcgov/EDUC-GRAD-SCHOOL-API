@@ -4,8 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.springframework.http.HttpHeaders;
-
 public class EducSchoolApiUtils {
 
     public static String formatDate (Date date) {
@@ -64,13 +62,5 @@ public class EducSchoolApiUtils {
         }
 
         return date;
-    }
-    
-    public static HttpHeaders getHeaders (String authToken)
-    {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type", "application/json");
-        httpHeaders.setBearerAuth(authToken);
-        return httpHeaders;
     }
 }
