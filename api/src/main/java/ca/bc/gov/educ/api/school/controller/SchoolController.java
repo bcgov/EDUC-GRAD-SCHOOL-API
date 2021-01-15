@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
-@CrossOrigin(origins =  "https://educ-grad-admin-master-wbmfsf-dev.pathfinder.gov.bc.ca")
+@CrossOrigin
 @RestController
 @EnableResourceServer
 @RequestMapping(EducSchoolApiConstants.GRAD_SCHOOL_API_ROOT_MAPPING)
