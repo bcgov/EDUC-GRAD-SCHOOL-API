@@ -2,9 +2,12 @@ package ca.bc.gov.educ.api.school.controller;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.bc.gov.educ.api.school.model.dto.School;
 import ca.bc.gov.educ.api.school.service.SchoolService;
 import ca.bc.gov.educ.api.school.util.EducSchoolApiConstants;
+import ca.bc.gov.educ.api.school.util.GradValidation;
+import ca.bc.gov.educ.api.school.util.PermissionsContants;
+import ca.bc.gov.educ.api.school.util.ResponseHelper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -34,9 +40,15 @@ public class SchoolController {
 
     @Autowired
     SchoolService schoolService;
+    
+    @Autowired
+    GradValidation validation;
+    
+    @Autowired
+	ResponseHelper response;
 
     @GetMapping
-    @PreAuthorize("#oauth2.hasScope('READ_GRAD_SCHOOL_DATA')")
+    @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
     public List<School> getAllSchools(
     		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
             @RequestParam(value = "pageSize", required = false,defaultValue = "150") Integer pageSize) { 
@@ -48,11 +60,31 @@ public class SchoolController {
     
     
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_BY_CODE_MAPPING)
-    @PreAuthorize("#oauth2.hasScope('READ_GRAD_SCHOOL_DATA')")
+    @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
     public School getSchoolDetails(@PathVariable String minCode) { 
     	logger.debug("getSchoolDetails : ");
     	OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
     	String accessToken = auth.getTokenValue();
         return schoolService.getSchoolDetails(minCode,accessToken);
     }
+    
+    @GetMapping(EducSchoolApiConstants.GET_SCHOOL_SEARCH_MAPPING)
+    @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
+    public ResponseEntity<List<School>> getSchoolsByParams(
+    		@RequestParam(value = "schoolName", required = false) String schoolName,
+    		@RequestParam(value = "districtName", required = false) String districtName,
+    		@RequestParam(value = "city", required = false) String city,
+    		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
+            @RequestParam(value = "pageSize", required = false,defaultValue = "20") Integer pageSize) {
+		OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
+    	String accessToken = auth.getTokenValue();
+    	if((StringUtils.isNotBlank(schoolName) && schoolName.length() < 3) || (StringUtils.isNotBlank(districtName) && districtName.length() < 3) || (StringUtils.isNotBlank(city) && city.length() < 3)) {
+    		validation.addError("Error in School Search");
+    	}
+    	if(validation.hasErrors()) {
+    		validation.stopOnErrors();
+    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    	}
+		return response.GET(schoolService.getSchoolsByParams(schoolName,districtName,city,pageNo,pageSize,accessToken));
+	}
 }
