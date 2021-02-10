@@ -9,6 +9,7 @@ public class EducSchoolApiConstants {
     public static final String API_VERSION = "v1";
     public static final String GRAD_SCHOOL_API_ROOT_MAPPING = "/api/" + API_VERSION + "/school";
     public static final String GET_SCHOOL_BY_CODE_MAPPING = "/{minCode}";
+    public static final String GET_SCHOOL_SEARCH_MAPPING = "/search";
 
     
     //Default Attribute value constants

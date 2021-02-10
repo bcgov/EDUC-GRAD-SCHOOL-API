@@ -11,5 +11,6 @@ import ca.bc.gov.educ.api.school.model.entity.DistrictEntity;
 public interface DistrictRepository extends JpaRepository<DistrictEntity, String> {
 
     List<DistrictEntity> findAll();
+    List<DistrictEntity> findByDistrictNameContaining(String districtName);
 
 }
