@@ -22,8 +22,40 @@ public class School {
     private String provinceName;
     private String countryCode; 
     private String countryName;
-    private String postal;
+    private String postal;    
     
+	public String getSchoolName() {
+		return  schoolName != null ? schoolName.trim(): null;
+	}
+	
+	public String getDistrictName() {
+		return districtName != null ? districtName.trim(): null;
+	}
+	
+	public String getAddress1() {
+		return address1 != null ? address1.trim(): null;
+	}
+
+	public String getAddress2() {
+		return address2 != null ? address2.trim(): null;
+	}
+
+	public String getCity() {
+		return city != null ? city.trim(): null;
+	}
+
+	public String getProvinceName() {
+		return provinceName != null ? provinceName.trim(): null;
+	}
+	
+	public String getCountryName() {
+		return countryName != null ? countryName.trim(): null;
+	}
+	
+	public String getPostal() {
+		return postal != null ? postal.trim(): null;
+	}
+
 	@Override
 	public String toString() {
 		return "School [minCode=" + minCode + ", schoolName=" + schoolName + ", districtName=" + districtName
