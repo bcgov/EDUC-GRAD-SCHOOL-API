@@ -51,7 +51,7 @@ public class SchoolController {
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
     public List<School> getAllSchools(
     		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
-            @RequestParam(value = "pageSize", required = false,defaultValue = "150") Integer pageSize) { 
+            @RequestParam(value = "pageSize", required = false,defaultValue = "50") Integer pageSize) { 
     	logger.debug("getAllSchools : ");
     	OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
     	String accessToken = auth.getTokenValue();
