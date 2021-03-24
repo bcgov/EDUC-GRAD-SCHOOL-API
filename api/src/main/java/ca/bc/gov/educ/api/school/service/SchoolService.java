@@ -106,7 +106,9 @@ public class SchoolService {
 		if(school != null) {
 			HttpHeaders httpHeaders = EducSchoolApiUtils.getHeaders(accessToken);
 			District dist = districtTransformer.transformToDTO(districtRepository.findById(school.getMinCode().substring(0, 3)));
-			school.setDistrictName(dist.getDistrictName());
+			if(dist != null)
+				school.setDistrictName(dist.getDistrictName());
+			
 			GradCountry country = restTemplate.exchange(String.format(getCountryByCountryCodeURL, school.getCountryCode()), HttpMethod.GET,
     				new HttpEntity<>(httpHeaders), GradCountry.class).getBody();
 			//GradCountry country = restTemplate.getForObject(String.format(getCountryByCountryCodeURL, school.getCountryCode()), GradCountry.class);
