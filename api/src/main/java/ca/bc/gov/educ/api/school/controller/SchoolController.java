@@ -61,11 +61,16 @@ public class SchoolController {
     
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_BY_CODE_MAPPING)
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
-    public School getSchoolDetails(@PathVariable String minCode) { 
+    public ResponseEntity<School> getSchoolDetails(@PathVariable String minCode) { 
     	logger.debug("getSchoolDetails : ");
     	OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
     	String accessToken = auth.getTokenValue();
-        return schoolService.getSchoolDetails(minCode,accessToken);
+    	School schoolResponse = schoolService.getSchoolDetails(minCode,accessToken);
+    	if(schoolResponse != null) {
+    		return response.GET(schoolResponse);
+    	}else {
+    		return response.NO_CONTENT();
+    	}
     }
     
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_SEARCH_MAPPING)

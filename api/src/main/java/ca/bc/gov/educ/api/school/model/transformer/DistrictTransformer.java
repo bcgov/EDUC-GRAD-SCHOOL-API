@@ -25,11 +25,12 @@ public class DistrictTransformer {
     public District transformToDTO ( Optional<DistrictEntity> districtEntity ) {
         DistrictEntity cae = new DistrictEntity();
 
-        if (districtEntity.isPresent())
+        if (districtEntity.isPresent()) {
             cae = districtEntity.get();
-
-        District district = modelMapper.map(cae, District.class);
-        return district;
+	        District district = modelMapper.map(cae, District.class);
+	        return district;
+        }
+        return null;
     }
 
 	public List<District> transformToDTO (Iterable<DistrictEntity> districtEntities ) {
