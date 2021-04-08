@@ -22,7 +22,8 @@ public class School {
     private String provinceName;
     private String countryCode; 
     private String countryName;
-    private String postal;    
+    private String postal;
+    private String independentAffiliation;
     
 	public String getSchoolName() {
 		return  schoolName != null ? schoolName.trim(): null;
@@ -63,6 +64,6 @@ public class School {
 				+ certificateEligibility + ", independentDesignation=" + independentDesignation + ", mailerType="
 				+ mailerType + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", provCode="
 				+ provCode + ", provinceName=" + provinceName + ", countryCode=" + countryCode + ", countryName="
-				+ countryName + ", postal=" + postal + "]";
+				+ countryName + ", postal=" + postal + ", independentAffiliation=" + independentAffiliation +"]";
 	}    
 }
