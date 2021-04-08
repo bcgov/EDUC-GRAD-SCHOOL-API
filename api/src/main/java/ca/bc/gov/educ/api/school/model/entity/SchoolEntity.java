@@ -51,5 +51,8 @@ public class SchoolEntity {
     
     @Column(name = "POSTAL", nullable = true)
     private String postal;
+    
+    @Column(name = "SCHL_IND_AFFIL", nullable = true)
+    private String independentAffiliation;
 
 }
