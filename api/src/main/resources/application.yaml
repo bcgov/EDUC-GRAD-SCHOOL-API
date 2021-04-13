@@ -3,7 +3,7 @@ security:
   oauth2:
     resource:
       jwt:
-        key-value: -----BEGIN PUBLIC KEY----- MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq61DP/tD00qMXNcfqdVHHX50OcND3m2NbDBmMQuLFx4eRmaBWsihqt2Zusfrdfh0boMKGTf8/ZPRkdsKx3GmdJT4ZFbNuiDIM9PEUR58u2PsrK1qMJM7v5oFOTddxCJfvHQjoF3CgAOBf0FNRY/k1x7yZZXZRlGGd9h5Fi9N+z4ocnjvVwSCXgTaOGLRZloneIaUdvGY+99LufOh915LKHePiyzhNFpz5arzgo6jX+ELpmxv6Isv/ZiBxCTV+Vcbk/gBRN05L06V6dMDEu4nmU8+e8or1ZFCSzffCXz38zLz0HokK+UeE3SxClFzTwwvrfOpK27/ylJvva08rl2TPQIDAQAB -----END PUBLIC KEY-----
+        key-value: ${KEYCLOAK_PUBLIC_KEY}
 
 #DB Properties
 spring:
@@ -12,12 +12,12 @@ spring:
   datasource:
     hikari:
       pool-name: ruleengine-api-cp
-      maximum-pool-size: 1
-      connection-timeout: 6000
-      max-lifetime: 600000
-    url: jdbc:oracle:thin:@//oltp-scan01-dt.educ.gov.bc.ca:1521/oltpd.world
-    username: graduation
-    password: lightb4lb$
+      maximum-pool-size: ${MAXIMUM_POOL_SIZE}
+      connection-timeout: ${CONNECTION_TIMEOUT}
+      max-lifetime: ${MAX_LIFETIME}
+    url: ${JDBC_URL}
+    username: ${ORACLE_USERNAME}
+    password: ${ORACLE_PASSWORD}
     driver-class: oracle.jdbc.driver.OracleDriver
   jpa:
     show-sql: true
@@ -25,10 +25,14 @@ spring:
     hibernate:
       ddl-auto: none
   mvc:
-    log-request-details: TRUE
+    log-request-details: ${SPRING_SHOW_REQUEST_DETAILS}
   jackson:
     deserialization:
       fail-on-unknown-properties: false
+  security:
+    user:
+      name: ${API_USERNAME}
+      password: ${API_PASSWORD}
 
 #Logging properties
 logging:
@@ -46,14 +50,14 @@ logging:
         gov:
           educ:
             api:
-              ruleengine: INFO
+              ruleengine: ${APP_LOG_LEVEL}
     org:
       springframework:
-        web: INFO
-        security: INFO
+        web: ${SPRING_WEB_LOG_LEVEL}
+        security: ${SPRING_SECURITY_LOG_LEVEL}
         boot:
           autoconfigure:
-            logging: INFO
+            logging: ${SPRING_BOOT_AUTOCONFIG_LOG_LEVEL}
 
 #Local properties
 server:
@@ -61,7 +65,7 @@ server:
     threads:
       worker: 128
       io: 16
-  port: 9999
+  #port: ${HTTP_PORT}
   
 #Endpoints
 endpoint: 
