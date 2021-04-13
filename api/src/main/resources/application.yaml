@@ -1,0 +1,74 @@
+#Keycloak/OAuth properties
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: -----BEGIN PUBLIC KEY----- MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq61DP/tD00qMXNcfqdVHHX50OcND3m2NbDBmMQuLFx4eRmaBWsihqt2Zusfrdfh0boMKGTf8/ZPRkdsKx3GmdJT4ZFbNuiDIM9PEUR58u2PsrK1qMJM7v5oFOTddxCJfvHQjoF3CgAOBf0FNRY/k1x7yZZXZRlGGd9h5Fi9N+z4ocnjvVwSCXgTaOGLRZloneIaUdvGY+99LufOh915LKHePiyzhNFpz5arzgo6jX+ELpmxv6Isv/ZiBxCTV+Vcbk/gBRN05L06V6dMDEu4nmU8+e8or1ZFCSzffCXz38zLz0HokK+UeE3SxClFzTwwvrfOpK27/ylJvva08rl2TPQIDAQAB -----END PUBLIC KEY-----
+
+#DB Properties
+spring:
+  jmx:
+    enabled: false
+  datasource:
+    hikari:
+      pool-name: ruleengine-api-cp
+      maximum-pool-size: 1
+      connection-timeout: 6000
+      max-lifetime: 600000
+    url: jdbc:oracle:thin:@//oltp-scan01-dt.educ.gov.bc.ca:1521/oltpd.world
+    username: graduation
+    password: lightb4lb$
+    driver-class: oracle.jdbc.driver.OracleDriver
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    hibernate:
+      ddl-auto: none
+  mvc:
+    log-request-details: TRUE
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+
+#Logging properties
+logging:
+  file:
+    max-history: 1
+    clean-history-on-start: true
+    max-size: 20MB
+    name: /logs/app.log
+  #pattern:
+  #  file: %d | [${HOSTNAME}] | %clr(%5p) | [%t]   | %logger{36}:%L | %msg%n
+  #  console: %d | [${HOSTNAME}] | %clr(%5p) | [%t]   | %logger{36}:%L | %msg%n
+  level:
+    ca:
+      bc:
+        gov:
+          educ:
+            api:
+              ruleengine: INFO
+    org:
+      springframework:
+        web: INFO
+        security: INFO
+        boot:
+          autoconfigure:
+            logging: INFO
+
+#Local properties
+server:
+  undertow:
+    threads:
+      worker: 128
+      io: 16
+  port: 9999
+  
+#Endpoints
+endpoint: 
+  code-api: 
+    country: 
+      country-by-country-code: 
+        url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/country/%s
+    province: 
+      province-by-prov-code: 
+        url: https://educ-grad-code-api-77c02f-dev.apps.silver.devops.gov.bc.ca/api/v1/code/province/%s
