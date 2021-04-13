@@ -26,7 +26,10 @@ import ca.bc.gov.educ.api.school.util.GradValidation;
 import ca.bc.gov.educ.api.school.util.PermissionsContants;
 import ca.bc.gov.educ.api.school.util.ResponseHelper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @CrossOrigin
@@ -49,6 +52,8 @@ public class SchoolController {
 
     @GetMapping
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
+    @Operation(summary = "Find All Schools", description = "Get All Schools", tags = { "School" })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
     public List<School> getAllSchools(
     		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
             @RequestParam(value = "pageSize", required = false,defaultValue = "50") Integer pageSize) { 
@@ -61,6 +66,8 @@ public class SchoolController {
     
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_BY_CODE_MAPPING)
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
+    @Operation(summary = "Find a School by Mincode", description = "Get a School by Mincode", tags = { "School" })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "204", description = "NO CONTENT")})
     public ResponseEntity<School> getSchoolDetails(@PathVariable String minCode) { 
     	logger.debug("getSchoolDetails : ");
     	OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
@@ -75,6 +82,8 @@ public class SchoolController {
     
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_SEARCH_MAPPING)
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
+    @Operation(summary = "Search for a school", description = "Search for a School", tags = { "School" })
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
     public ResponseEntity<List<School>> getSchoolsByParams(
     		@RequestParam(value = "schoolName", required = false) String schoolName,
     		@RequestParam(value = "districtName", required = false) String districtName,
