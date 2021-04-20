@@ -14,11 +14,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import ca.bc.gov.educ.api.school.model.dto.District;
 import ca.bc.gov.educ.api.school.model.dto.GradCountry;
@@ -31,7 +29,6 @@ import ca.bc.gov.educ.api.school.model.transformer.SchoolTransformer;
 import ca.bc.gov.educ.api.school.repository.DistrictRepository;
 import ca.bc.gov.educ.api.school.repository.SchoolRepository;
 import ca.bc.gov.educ.api.school.util.EducSchoolApiConstants;
-import ca.bc.gov.educ.api.school.util.EducSchoolApiUtils;
 
 @Service
 public class SchoolService {
@@ -50,6 +47,9 @@ public class SchoolService {
     
     @Autowired
     RestTemplate restTemplate;
+    
+    @Autowired
+    WebClient webClient;
     
     @Value(EducSchoolApiConstants.ENDPOINT_COUNTRY_BY_COUNTRY_CODE_URL)
     private String getCountryByCountryCodeURL;
@@ -76,20 +76,16 @@ public class SchoolService {
         	Pageable paging = PageRequest.of(pageNo, pageSize);        	 
             Page<SchoolEntity> pagedResult = schoolRepository.findAll(paging);
         	schoolList = schoolTransformer.transformToDTO(pagedResult.getContent());  
-        	HttpHeaders httpHeaders = EducSchoolApiUtils.getHeaders(accessToken);
         	schoolList.forEach(sL -> {
         		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
         		sL.setDistrictName(dist.getDistrictName());
-        		
-        		GradCountry country = restTemplate.exchange(String.format(getCountryByCountryCodeURL, sL.getCountryCode()), HttpMethod.GET,
-        				new HttpEntity<>(httpHeaders), GradCountry.class).getBody();
-        		//GradCountry country = restTemplate.getForObject(String.format(getCountryByCountryCodeURL, sL.getCountryCode()), GradCountry.class);
-                if(country != null) {
+        		GradCountry country = webClient.get().uri(String.format(getCountryByCountryCodeURL, sL.getCountryCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+    					.bodyToMono(GradCountry.class).block();
+        		if(country != null) {
                 	sL.setCountryName(country.getCountryName());
         		}
-                GradProvince province = restTemplate.exchange(String.format(getProvinceByProvCodeURL, sL.getProvCode()), HttpMethod.GET,
-        				new HttpEntity<>(httpHeaders), GradProvince.class).getBody();
-                //GradProvince province = restTemplate.getForObject(String.format(getProvinceByProvCodeURL, sL.getProvCode()), GradProvince.class);
+                GradProvince province = webClient.get().uri(String.format(getProvinceByProvCodeURL, sL.getProvCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+    	        		.bodyToMono(GradProvince.class).block();
                 if(province != null) {
                 	sL.setProvinceName(province.getProvName());
         		}
@@ -104,20 +100,16 @@ public class SchoolService {
 	public School getSchoolDetails(String minCode,String accessToken) {
 		School school =  schoolTransformer.transformToDTO(schoolRepository.findById(minCode));
 		if(school != null) {
-			HttpHeaders httpHeaders = EducSchoolApiUtils.getHeaders(accessToken);
 			District dist = districtTransformer.transformToDTO(districtRepository.findById(school.getMinCode().substring(0, 3)));
 			if(dist != null)
 				school.setDistrictName(dist.getDistrictName());
-			
-			GradCountry country = restTemplate.exchange(String.format(getCountryByCountryCodeURL, school.getCountryCode()), HttpMethod.GET,
-    				new HttpEntity<>(httpHeaders), GradCountry.class).getBody();
-			//GradCountry country = restTemplate.getForObject(String.format(getCountryByCountryCodeURL, school.getCountryCode()), GradCountry.class);
+			GradCountry country = webClient.get().uri(String.format(getCountryByCountryCodeURL, school.getCountryCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+					.bodyToMono(GradCountry.class).block();
 	        if(country != null) {
 	        	school.setCountryName(country.getCountryName());
 			}
-	        GradProvince province = restTemplate.exchange(String.format(getProvinceByProvCodeURL, school.getProvCode()), HttpMethod.GET,
-    				new HttpEntity<>(httpHeaders), GradProvince.class).getBody();
-	        //GradProvince province = restTemplate.getForObject(String.format(getProvinceByProvCodeURL, school.getProvCode()), GradProvince.class);
+	        GradProvince province = webClient.get().uri(String.format(getProvinceByProvCodeURL, school.getProvCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+	        		.bodyToMono(GradProvince.class).block();
 	        if(province != null) {
 	        	school.setProvinceName(province.getProvName());
 			}
@@ -143,21 +135,18 @@ public class SchoolService {
 				});	
 	    	}
     	}
-    	HttpHeaders httpHeaders = EducSchoolApiUtils.getHeaders(accessToken);
     	List<School> schoolList = schoolTransformer.transformToDTO(schoolRepository.searchForSchool(StringUtils.toRootUpperCase(StringUtils.strip(schoolName, "*")),isMincodeListIncluded,minCodeList,StringUtils.toRootUpperCase(StringUtils.strip(city, "*"))));
     	schoolList.forEach(sL -> {
     		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
     		sL.setDistrictName(dist.getDistrictName());
     		
-    		GradCountry country = restTemplate.exchange(String.format(getCountryByCountryCodeURL, sL.getCountryCode()), HttpMethod.GET,
-    				new HttpEntity<>(httpHeaders), GradCountry.class).getBody();
-    		//GradCountry country = restTemplate.getForObject(String.format(getCountryByCountryCodeURL, sL.getCountryCode()), GradCountry.class);
-            if(country != null) {
+    		GradCountry country = webClient.get().uri(String.format(getCountryByCountryCodeURL, sL.getCountryCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+					.bodyToMono(GradCountry.class).block();
+    		if(country != null) {
             	sL.setCountryName(country.getCountryName());
     		}
-            GradProvince province = restTemplate.exchange(String.format(getProvinceByProvCodeURL, sL.getProvCode()), HttpMethod.GET,
-    				new HttpEntity<>(httpHeaders), GradProvince.class).getBody();
-            //GradProvince province = restTemplate.getForObject(String.format(getProvinceByProvCodeURL, sL.getProvCode()), GradProvince.class);
+            GradProvince province = webClient.get().uri(String.format(getProvinceByProvCodeURL, sL.getProvCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+	        		.bodyToMono(GradProvince.class).block();
             if(province != null) {
             	sL.setProvinceName(province.getProvName());
     		}
