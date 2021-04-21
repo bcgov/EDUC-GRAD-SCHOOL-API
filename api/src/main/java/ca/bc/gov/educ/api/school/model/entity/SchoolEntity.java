@@ -27,7 +27,7 @@ public class SchoolEntity {
     
     @Column(name = "DOGWOOD_ELIG", nullable = true)
     private String certificateEligibility;  
-
+    
     @Column(name = "SCHL_IND_TYPE", nullable = true)
     private String independentDesignation;
     
@@ -54,5 +54,11 @@ public class SchoolEntity {
     
     @Column(name = "SCHL_IND_AFFIL", nullable = true)
     private String independentAffiliation;
+    
+    @Column(name = "OPEN_FLAG", nullable = true)
+    private String openFlag;  
+    
+    @Column(name = "SIGNATURE_DISTNO", nullable = true)
+    private String signatureDistrict;
 
 }

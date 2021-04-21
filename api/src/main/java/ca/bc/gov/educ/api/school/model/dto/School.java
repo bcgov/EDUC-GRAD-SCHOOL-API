@@ -24,6 +24,8 @@ public class School {
     private String countryName;
     private String postal;
     private String independentAffiliation;
+    private String openFlag;    
+    private String signatureDistrict;
     
 	public String getSchoolName() {
 		return  schoolName != null ? schoolName.trim(): null;
@@ -56,6 +58,18 @@ public class School {
 	public String getPostal() {
 		return postal != null ? postal.trim(): null;
 	}
+	
+	public String getIndependentDesignation() {
+		return independentDesignation != null ? independentDesignation.trim(): null;
+	}
+	
+	public String getIndependentAffiliation() {
+		return independentAffiliation != null ? independentAffiliation.trim(): null;
+	}
+	
+	public String getOpenFlag() {
+		return openFlag != null ? openFlag.trim(): null;
+	}
 
 	@Override
 	public String toString() {
@@ -64,6 +78,9 @@ public class School {
 				+ certificateEligibility + ", independentDesignation=" + independentDesignation + ", mailerType="
 				+ mailerType + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", provCode="
 				+ provCode + ", provinceName=" + provinceName + ", countryCode=" + countryCode + ", countryName="
-				+ countryName + ", postal=" + postal + ", independentAffiliation=" + independentAffiliation +"]";
-	}    
+				+ countryName + ", postal=" + postal + ", independentAffiliation=" + independentAffiliation
+				+ ", openFlag=" + openFlag + ", signatureDistrict=" + signatureDistrict + "]";
+	}
+
+	    
 }
