@@ -70,6 +70,11 @@ public class School {
 	public String getOpenFlag() {
 		return openFlag != null ? openFlag.trim(): null;
 	}
+	
+	public String getSignatureDistrict() {
+		return signatureDistrict != null ? signatureDistrict.trim(): null;
+	}
+	
 
 	@Override
 	public String toString() {
