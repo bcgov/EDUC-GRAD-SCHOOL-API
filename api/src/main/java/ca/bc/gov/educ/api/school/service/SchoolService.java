@@ -73,22 +73,22 @@ public class SchoolService {
         List<School> schoolList  = new ArrayList<School>();
 
         try {
-        	Pageable paging = PageRequest.of(pageNo, pageSize);        	 
-            Page<SchoolEntity> pagedResult = schoolRepository.findAll(paging);
-        	schoolList = schoolTransformer.transformToDTO(pagedResult.getContent());  
+//        	Pageable paging = PageRequest.of(pageNo, pageSize);        	 
+//          Page<SchoolEntity> pagedResult = schoolRepository.findAll(paging);
+        	schoolList = schoolTransformer.transformToDTO(schoolRepository.findAll());  
         	schoolList.forEach(sL -> {
         		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
         		sL.setDistrictName(dist.getDistrictName());
-        		GradCountry country = webClient.get().uri(String.format(getCountryByCountryCodeURL, sL.getCountryCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
-    					.bodyToMono(GradCountry.class).block();
-        		if(country != null) {
-                	sL.setCountryName(country.getCountryName());
-        		}
-                GradProvince province = webClient.get().uri(String.format(getProvinceByProvCodeURL, sL.getProvCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
-    	        		.bodyToMono(GradProvince.class).block();
-                if(province != null) {
-                	sL.setProvinceName(province.getProvName());
-        		}
+//        		GradCountry country = webClient.get().uri(String.format(getCountryByCountryCodeURL, sL.getCountryCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+//    					.bodyToMono(GradCountry.class).block();
+//        		if(country != null) {
+//                	sL.setCountryName(country.getCountryName());
+//        		}
+//                GradProvince province = webClient.get().uri(String.format(getProvinceByProvCodeURL, sL.getProvCode())).headers(h -> h.setBearerAuth(accessToken)).retrieve()
+//    	        		.bodyToMono(GradProvince.class).block();
+//                if(province != null) {
+//                	sL.setProvinceName(province.getProvName());
+//        		}
         	});
         } catch (Exception e) {
             logger.debug("Exception:" + e);
