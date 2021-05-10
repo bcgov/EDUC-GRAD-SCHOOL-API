@@ -72,5 +72,4 @@ public class EducSchoolApiApplication {
                     "/actuator/health", "/actuator/prometheus", "/health");
         }
     }
-
 }
