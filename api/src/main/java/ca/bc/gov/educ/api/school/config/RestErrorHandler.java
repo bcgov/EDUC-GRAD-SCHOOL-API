@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import ca.bc.gov.educ.api.school.util.ApiResponseMessage.MessageTypeEnum;
 import ca.bc.gov.educ.api.school.util.ApiResponseModel;
-import ca.bc.gov.educ.api.school.util.GradBusinessRuleException;
+import ca.bc.gov.educ.api.school.exception.GradBusinessRuleException;
 import ca.bc.gov.educ.api.school.util.GradValidation;
 
 @ControllerAdvice
