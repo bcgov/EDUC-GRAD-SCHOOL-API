@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.school.util;
+package ca.bc.gov.educ.api.school.exception;
 
 public class GradBusinessRuleException extends RuntimeException{
 

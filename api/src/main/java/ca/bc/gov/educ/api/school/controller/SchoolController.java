@@ -36,7 +36,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @EnableResourceServer
 @RequestMapping(EducSchoolApiConstants.GRAD_SCHOOL_API_ROOT_MAPPING)
-@OpenAPIDefinition(info = @Info(title = "API for School Data.", description = "This Read API is for Reading school data.", version = "1"), security = {@SecurityRequirement(name = "OAUTH2", scopes = {"READ_GRAD_SCHOOL_DATA"})})
+@OpenAPIDefinition(info = @Info(title = "API for School Data.", description = "This Read API is for Reading school data.", version = "1"),
+		security = {@SecurityRequirement(name = "OAUTH2", scopes = {"READ_GRAD_SCHOOL_DATA"})})
 public class SchoolController {
 
     private static Logger logger = LoggerFactory.getLogger(SchoolController.class);
@@ -58,7 +59,8 @@ public class SchoolController {
     		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
             @RequestParam(value = "pageSize", required = false,defaultValue = "50") Integer pageSize) { 
     	logger.debug("getAllSchools : ");
-    	OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
+    	OAuth2AuthenticationDetails auth =
+				(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
     	String accessToken = auth.getTokenValue();
         return schoolService.getSchoolList(pageNo,pageSize,accessToken);
     }
@@ -67,10 +69,12 @@ public class SchoolController {
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_BY_CODE_MAPPING)
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
     @Operation(summary = "Find a School by Mincode", description = "Get a School by Mincode", tags = { "School" })
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "204", description = "NO CONTENT")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "204", description = "NO CONTENT")})
     public ResponseEntity<School> getSchoolDetails(@PathVariable String minCode) { 
     	logger.debug("getSchoolDetails : ");
-    	OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
+    	OAuth2AuthenticationDetails auth =
+				(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
     	String accessToken = auth.getTokenValue();
     	School schoolResponse = schoolService.getSchoolDetails(minCode,accessToken);
     	if(schoolResponse != null) {
@@ -83,16 +87,20 @@ public class SchoolController {
     @GetMapping(EducSchoolApiConstants.GET_SCHOOL_SEARCH_MAPPING)
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
     @Operation(summary = "Search for a school", description = "Search for a School", tags = { "School" })
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST")})
     public ResponseEntity<List<School>> getSchoolsByParams(
     		@RequestParam(value = "schoolName", required = false) String schoolName,
     		@RequestParam(value = "districtName", required = false) String districtName,
     		@RequestParam(value = "city", required = false) String city,
     		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
             @RequestParam(value = "pageSize", required = false,defaultValue = "20") Integer pageSize) {
-		OAuth2AuthenticationDetails auth = (OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails(); 
+		OAuth2AuthenticationDetails auth =
+				(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
     	String accessToken = auth.getTokenValue();
-    	if((StringUtils.isNotBlank(schoolName) && schoolName.length() < 3) || (StringUtils.isNotBlank(districtName) && districtName.length() < 3) || (StringUtils.isNotBlank(city) && city.length() < 3)) {
+    	if((StringUtils.isNotBlank(schoolName) && schoolName.length() < 3)
+				|| (StringUtils.isNotBlank(districtName) && districtName.length() < 3)
+				|| (StringUtils.isNotBlank(city) && city.length() < 3)) {
     		validation.addError("Error in School Search");
     	}
     	if(validation.hasErrors()) {
