@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ca.bc.gov.educ.api.school.util.MessageHelper;
 
 @Configuration
-@PropertySource("classpath:messages.properties")
+@PropertySource(value = "classpath:messages.yaml", factory = YamlPropertySourceFactory.class)
 public class GradSchoolConfig implements WebMvcConfigurer {
 
 	@Autowired
