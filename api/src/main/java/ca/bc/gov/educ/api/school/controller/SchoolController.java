@@ -2,11 +2,9 @@ package ca.bc.gov.educ.api.school.controller;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,14 +53,9 @@ public class SchoolController {
     @PreAuthorize(PermissionsContants.READ_SCHOOL_DATA)
     @Operation(summary = "Find All Schools", description = "Get All Schools", tags = { "School" })
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK")})
-    public List<School> getAllSchools(
-    		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
-            @RequestParam(value = "pageSize", required = false,defaultValue = "50") Integer pageSize) { 
+    public List<School> getAllSchools() { 
     	logger.debug("getAllSchools : ");
-    	OAuth2AuthenticationDetails auth =
-				(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-    	String accessToken = auth.getTokenValue();
-        return schoolService.getSchoolList(pageNo,pageSize,accessToken);
+        return schoolService.getSchoolList();
     }
     
     
@@ -91,22 +84,7 @@ public class SchoolController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST")})
     public ResponseEntity<List<School>> getSchoolsByParams(
     		@RequestParam(value = "schoolName", required = false) String schoolName,
-    		@RequestParam(value = "districtName", required = false) String districtName,
-    		@RequestParam(value = "city", required = false) String city,
-    		@RequestParam(value = "pageNo", required = false,defaultValue = "0") Integer pageNo, 
-            @RequestParam(value = "pageSize", required = false,defaultValue = "20") Integer pageSize) {
-		OAuth2AuthenticationDetails auth =
-				(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
-    	String accessToken = auth.getTokenValue();
-    	if((StringUtils.isNotBlank(schoolName) && schoolName.length() < 3)
-				|| (StringUtils.isNotBlank(districtName) && districtName.length() < 3)
-				|| (StringUtils.isNotBlank(city) && city.length() < 3)) {
-    		validation.addError("Error in School Search");
-    	}
-    	if(validation.hasErrors()) {
-    		validation.stopOnErrors();
-    		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    	}
-		return response.GET(schoolService.getSchoolsByParams(schoolName,districtName,city,pageNo,pageSize,accessToken));
-	}
+    		@RequestParam(value = "mincode", required = false) String mincode) {
+		return response.GET(schoolService.getSchoolsByParams(schoolName,mincode));
+    }
 }
