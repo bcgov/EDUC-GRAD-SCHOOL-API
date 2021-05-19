@@ -26,6 +26,9 @@ public class School {
     private String independentAffiliation;
     private String openFlag;    
     private String signatureDistrict;
+    private String newMinCode;    
+    private String schoolOrg;    
+    private String appendTrans;
     
 	public String getSchoolName() {
 		return  schoolName != null ? schoolName.trim(): null;

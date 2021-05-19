@@ -60,5 +60,14 @@ public class SchoolEntity {
     
     @Column(name = "SIGNATURE_DISTNO", nullable = true)
     private String signatureDistrict;
+    
+    @Column(name = "NEW_MINCODE", nullable = true)
+    private String newMinCode;
+    
+    @Column(name = "SCHL_ORG", nullable = true)
+    private String schoolOrg;
+    
+    @Column(name = "APPEND_TRANS", nullable = true)
+    private String appendTrans;
 
 }
