@@ -79,7 +79,7 @@ public class SchoolEntity {
     @Column(name = "PHONE", nullable = true)
     private String schoolPhone;
     
-    @Column(name = "SCHL", nullable = true)
+    @Column(name = "SCHL_FAX", nullable = true)
     private String schoolFax;
     
     @Column(name = "EMAIL", nullable = true)
