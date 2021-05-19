@@ -85,6 +85,9 @@ public class SchoolController {
     public ResponseEntity<List<School>> getSchoolsByParams(
     		@RequestParam(value = "schoolName", required = false) String schoolName,
     		@RequestParam(value = "mincode", required = false) String mincode) {
-		return response.GET(schoolService.getSchoolsByParams(schoolName,mincode));
+    	OAuth2AuthenticationDetails auth =
+				(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+    	String accessToken = auth.getTokenValue();
+		return response.GET(schoolService.getSchoolsByParams(schoolName,mincode,accessToken));
     }
 }

@@ -104,7 +104,7 @@ public class SchoolService {
 		return school;
 	}
 
-	public List<School> getSchoolsByParams(String schoolName, String minCode) {    	
+	public List<School> getSchoolsByParams(String schoolName, String minCode,String accessToken) {    	
 		CriteriaHelper criteria = new CriteriaHelper();
         getSearchCriteria("minCode", minCode, criteria);
         getSearchCriteria("schoolName", schoolName, criteria);
@@ -112,6 +112,22 @@ public class SchoolService {
     	schoolList.forEach(sL -> {
     		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
     		sL.setDistrictName(dist.getDistrictName());
+    		GradCountry country = webClient.get()
+					.uri(String.format(getCountryByCountryCodeURL, sL.getCountryCode()))
+					.headers(h -> h.setBearerAuth(accessToken))
+					.retrieve()
+					.bodyToMono(GradCountry.class).block();
+	        if(country != null) {
+	        	sL.setCountryName(country.getCountryName());
+			}
+	        GradProvince province = webClient.get()
+					.uri(String.format(getProvinceByProvCodeURL, sL.getProvCode()))
+					.headers(h -> h.setBearerAuth(accessToken))
+					.retrieve()
+	        		.bodyToMono(GradProvince.class).block();
+	        if(province != null) {
+	        	sL.setProvinceName(province.getProvName());
+			}
     	});
     	return schoolList;
 	}
