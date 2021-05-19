@@ -69,5 +69,20 @@ public class SchoolEntity {
     
     @Column(name = "APPEND_TRANS", nullable = true)
     private String appendTrans;
+    
+    @Column(name = "MINISTRY_CONTACT", nullable = true)
+    private String ministryContact;
+    
+    @Column(name = "PRINC_NAME", nullable = true)
+    private String principalName;
 
+    @Column(name = "PHONE", nullable = true)
+    private String schoolPhone;
+    
+    @Column(name = "SCHL", nullable = true)
+    private String schoolFax;
+    
+    @Column(name = "EMAIL", nullable = true)
+    private String schoolEmail;
+    
 }
