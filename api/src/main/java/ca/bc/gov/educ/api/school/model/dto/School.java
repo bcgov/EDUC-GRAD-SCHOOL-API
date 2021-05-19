@@ -29,6 +29,11 @@ public class School {
     private String newMinCode;    
     private String schoolOrg;    
     private String appendTrans;
+    private String ministryContact;
+    private String principalName;
+    private String schoolPhone;
+    private String schoolFax;
+    private String schoolEmail;
     
 	public String getSchoolName() {
 		return  schoolName != null ? schoolName.trim(): null;
