@@ -44,14 +44,6 @@ logging:
           autoconfigure:
             logging: INFO
 
-#Local properties
-server:
-  undertow:
-    threads:
-      worker: 128
-      io: 16
-  port: 9997
-
 #API Documentation
 springdoc:
   api-docs:
