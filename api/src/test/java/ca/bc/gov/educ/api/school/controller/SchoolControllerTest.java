@@ -1,10 +1,7 @@
 package ca.bc.gov.educ.api.school.controller;
 
 import ca.bc.gov.educ.api.school.model.dto.School;
-import ca.bc.gov.educ.api.school.repository.criteria.CriteriaHelper;
 import ca.bc.gov.educ.api.school.service.SchoolService;
-import ca.bc.gov.educ.api.school.util.GradValidation;
-import ca.bc.gov.educ.api.school.util.MessageHelper;
 import ca.bc.gov.educ.api.school.util.ResponseHelper;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,18 +33,6 @@ public class SchoolControllerTest {
 
     @InjectMocks
     private SchoolController schoolController;
-
-    @Mock
-    MessageHelper messageHelper;
-
-    @Mock
-    GradValidation gradValidation;
-
-    @Mock
-    OAuth2AuthenticationDetails oAuth2AuthenticationDetails;
-
-    @Mock
-    SecurityContextHolder securityContextHolder;
 
     @Test
     public void testGetAllSchools() {
