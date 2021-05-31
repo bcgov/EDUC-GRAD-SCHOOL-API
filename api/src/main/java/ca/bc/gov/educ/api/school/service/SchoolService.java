@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -50,11 +49,8 @@ public class SchoolService {
     @Autowired
     WebClient webClient;
     
-    @Value(EducSchoolApiConstants.ENDPOINT_COUNTRY_BY_COUNTRY_CODE_URL)
-    private String getCountryByCountryCodeURL;
-    
-    @Value(EducSchoolApiConstants.ENDPOINT_PROVINCE_BY_PROV_CODE_URL)
-    private String getProvinceByProvCodeURL;
+	@Autowired
+	EducSchoolApiConstants educSchoolApiConstants;
     
 
     @SuppressWarnings("unused")
@@ -62,9 +58,6 @@ public class SchoolService {
 
      /**
      * Get all Schools in School DTO
-     * @param pageSize 
-     * @param pageNo 
-     * @param accessToken 
      *
      * @return Course 
      * @throws java.lang.Exception
@@ -85,7 +78,7 @@ public class SchoolService {
 			if(dist != null)
 				school.setDistrictName(dist.getDistrictName());
 			GradCountry country = webClient.get()
-					.uri(String.format(getCountryByCountryCodeURL, school.getCountryCode()))
+					.uri(String.format(educSchoolApiConstants.getCountryByCountryCodeUrl(), school.getCountryCode()))
 					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 					.bodyToMono(GradCountry.class).block();
@@ -93,7 +86,7 @@ public class SchoolService {
 	        	school.setCountryName(country.getCountryName());
 			}
 	        GradProvince province = webClient.get()
-					.uri(String.format(getProvinceByProvCodeURL, school.getProvCode()))
+					.uri(String.format(educSchoolApiConstants.getProvinceByProvinceCodeUrl(), school.getProvCode()))
 					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 	        		.bodyToMono(GradProvince.class).block();
@@ -113,7 +106,7 @@ public class SchoolService {
     		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
     		sL.setDistrictName(dist.getDistrictName());
     		GradCountry country = webClient.get()
-					.uri(String.format(getCountryByCountryCodeURL, sL.getCountryCode()))
+					.uri(String.format(educSchoolApiConstants.getCountryByCountryCodeUrl(), sL.getCountryCode()))
 					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 					.bodyToMono(GradCountry.class).block();
@@ -121,7 +114,7 @@ public class SchoolService {
 	        	sL.setCountryName(country.getCountryName());
 			}
 	        GradProvince province = webClient.get()
-					.uri(String.format(getProvinceByProvCodeURL, sL.getProvCode()))
+					.uri(String.format(educSchoolApiConstants.getProvinceByProvinceCodeUrl(), sL.getProvCode()))
 					.headers(h -> h.setBearerAuth(accessToken))
 					.retrieve()
 	        		.bodyToMono(GradProvince.class).block();
