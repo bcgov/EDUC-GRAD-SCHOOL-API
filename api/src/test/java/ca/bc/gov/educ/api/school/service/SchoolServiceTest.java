@@ -94,21 +94,21 @@ public class SchoolServiceTest {
     @Test
     public void testGetSchoolList() {
         // School data
-        List<School> gradSchoolList = new ArrayList<>();
-        School school1 = new School();
+        final List<School> gradSchoolList = new ArrayList<>();
+        final School school1 = new School();
         school1.setMinCode("1234567");
         school1.setSchoolName("Test1 School");
         school1.setDistrictName("Test1 District");
         gradSchoolList.add(school1);
 
-        School school2 = new School();
+        final School school2 = new School();
         school2.setMinCode("7654321");
         school2.setSchoolName("Test2 School");
         school2.setDistrictName("Test2 District");
         gradSchoolList.add(school2);
 
         // District data
-        District district = new District();
+        final District district = new District();
         district.setDistrictNumber("123");
         district.setDistrictName("Test District");
 
@@ -124,7 +124,7 @@ public class SchoolServiceTest {
     @Test
     public void testGetSchoolDetails() {
         // School
-        School school = new School();
+        final School school = new School();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
         school.setDistrictName("Test District");
@@ -132,17 +132,17 @@ public class SchoolServiceTest {
         school.setProvCode("BC");
 
         // District
-        District district = new District();
+        final District district = new District();
         district.setDistrictNumber("123");
         district.setDistrictName("Test District");
 
         // Country
-        GradCountry country = new GradCountry();
+        final GradCountry country = new GradCountry();
         country.setCountryCode("CA");
         country.setCountryName("Canada");
 
         // Provice
-        GradProvince province = new GradProvince();
+        final GradProvince province = new GradProvince();
         province.setCountryCode("CA");
         province.setProvCode("BC");
         province.setProvName("British Columbia");
@@ -172,7 +172,7 @@ public class SchoolServiceTest {
     @Test
     public void testGetSchoolsByParams() {
         // School
-        School school = new School();
+        final School school = new School();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
         school.setDistrictName("Test District");
@@ -180,22 +180,22 @@ public class SchoolServiceTest {
         school.setProvCode("BC");
 
         // District
-        District district = new District();
+        final District district = new District();
         district.setDistrictNumber("123");
         district.setDistrictName("Test District");
 
         // Country
-        GradCountry country = new GradCountry();
+        final GradCountry country = new GradCountry();
         country.setCountryCode("CA");
         country.setCountryName("Canada");
 
         // Provice
-        GradProvince province = new GradProvince();
+        final GradProvince province = new GradProvince();
         province.setCountryCode("CA");
         province.setProvCode("BC");
         province.setProvName("British Columbia");
 
-        CriteriaHelper criteria = new CriteriaHelper();
+        final CriteriaHelper criteria = new CriteriaHelper();
         schoolService.getSearchCriteria("minCode", "1234567", criteria);
         schoolService.getSearchCriteria("schoolName", "Test School", criteria);
 

@@ -36,7 +36,7 @@ public class SchoolControllerTest {
 
     @Test
     public void testGetAllSchools() {
-        List<School> gradSchoolList = new ArrayList<>();
+        final List<School> gradSchoolList = new ArrayList<>();
         School obj = new School();
         obj.setMinCode("1234567");
         obj.setSchoolName("Test1 School");
@@ -53,7 +53,7 @@ public class SchoolControllerTest {
 
     @Test
     public void testGetSchoolDetails() {
-        School school = new School();
+        final School school = new School();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
 
@@ -73,7 +73,7 @@ public class SchoolControllerTest {
 
     @Test
     public void testGetSchoolsByParams() {
-        School school = new School();
+        final School school = new School();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
 
