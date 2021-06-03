@@ -1,12 +1,10 @@
 package ca.bc.gov.educ.api.school.service;
 
-import ca.bc.gov.educ.api.school.model.dto.District;
 import ca.bc.gov.educ.api.school.model.dto.GradCountry;
 import ca.bc.gov.educ.api.school.model.dto.GradProvince;
 import ca.bc.gov.educ.api.school.model.dto.School;
+import ca.bc.gov.educ.api.school.model.entity.DistrictEntity;
 import ca.bc.gov.educ.api.school.model.entity.SchoolEntity;
-import ca.bc.gov.educ.api.school.model.transformer.DistrictTransformer;
-import ca.bc.gov.educ.api.school.model.transformer.SchoolTransformer;
 import ca.bc.gov.educ.api.school.repository.DistrictRepository;
 import ca.bc.gov.educ.api.school.repository.SchoolCriteriaQueryRepository;
 import ca.bc.gov.educ.api.school.repository.SchoolRepository;
@@ -29,13 +27,13 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(SpringRunner.class)
@@ -57,12 +55,6 @@ public class SchoolServiceTest {
 
     @MockBean
     private SchoolCriteriaQueryRepository schoolCriteriaQueryRepository;
-
-    @MockBean
-    private SchoolTransformer schoolTransformer;
-
-    @MockBean
-    private DistrictTransformer districtTransformer;
 
     @MockBean
     private RestTemplate restTemplate;
@@ -94,61 +86,62 @@ public class SchoolServiceTest {
     @Test
     public void testGetSchoolList() {
         // School data
-        List<School> gradSchoolList = new ArrayList<>();
-        School school1 = new School();
+        final List<SchoolEntity> gradSchoolList = new ArrayList<>();
+        final SchoolEntity school1 = new SchoolEntity();
         school1.setMinCode("1234567");
         school1.setSchoolName("Test1 School");
-        school1.setDistrictName("Test1 District");
         gradSchoolList.add(school1);
 
-        School school2 = new School();
+        final SchoolEntity school2 = new SchoolEntity();
         school2.setMinCode("7654321");
         school2.setSchoolName("Test2 School");
-        school2.setDistrictName("Test2 District");
         gradSchoolList.add(school2);
 
         // District data
-        District district = new District();
+        final DistrictEntity district = new DistrictEntity();
         district.setDistrictNumber("123");
         district.setDistrictName("Test District");
 
-        when(schoolTransformer.transformToDTO(schoolRepository.findAll())).thenReturn(gradSchoolList);
-        when(districtTransformer.transformToDTO(districtRepository.findById(any()))).thenReturn(district);
+        when(schoolRepository.findAll()).thenReturn(gradSchoolList);
+        when(districtRepository.findById(eq("123"))).thenReturn(Optional.of(district));
         List<School> results = schoolService.getSchoolList();
-        verify(schoolTransformer).transformToDTO(schoolRepository.findAll());
 
         assertThat(results).isNotNull();
         assertThat(results.size()).isEqualTo(2);
+        School responseSchool = results.get(0);
+        assertThat(responseSchool.getSchoolName()).isEqualTo(school1.getSchoolName());
+        assertThat(responseSchool.getDistrictName()).isEqualTo(district.getDistrictName());
     }
 
     @Test
     public void testGetSchoolDetails() {
         // School
-        School school = new School();
+        final SchoolEntity school = new SchoolEntity();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
-        school.setDistrictName("Test District");
         school.setCountryCode("CA");
         school.setProvCode("BC");
 
         // District
-        District district = new District();
+        final DistrictEntity district = new DistrictEntity();
         district.setDistrictNumber("123");
         district.setDistrictName("Test District");
+        district.setCountryCode("CA");
+        district.setProvCode("BC");
 
         // Country
-        GradCountry country = new GradCountry();
+        final GradCountry country = new GradCountry();
         country.setCountryCode("CA");
         country.setCountryName("Canada");
 
-        // Provice
-        GradProvince province = new GradProvince();
+        // Province
+        final GradProvince province = new GradProvince();
         province.setCountryCode("CA");
         province.setProvCode("BC");
         province.setProvName("British Columbia");
 
-        when(schoolTransformer.transformToDTO(schoolRepository.findById("1234567"))).thenReturn(school);
-        when(districtTransformer.transformToDTO(districtRepository.findById("123"))).thenReturn(district);
+        when(schoolRepository.findById(eq("1234567"))).thenReturn(Optional.of(school));
+        when(districtRepository.findById(eq("123"))).thenReturn(Optional.of(district));
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(eq(String.format(educSchoolApiConstants.getCountryByCountryCodeUrl(), country.getCountryCode())))).thenReturn(this.requestHeadersMock);
@@ -172,35 +165,32 @@ public class SchoolServiceTest {
     @Test
     public void testGetSchoolsByParams() {
         // School
-        School school = new School();
+        final SchoolEntity school = new SchoolEntity();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
-        school.setDistrictName("Test District");
         school.setCountryCode("CA");
         school.setProvCode("BC");
 
         // District
-        District district = new District();
+        final DistrictEntity district = new DistrictEntity();
         district.setDistrictNumber("123");
         district.setDistrictName("Test District");
+        district.setCountryCode("CA");
+        district.setProvCode("BC");
 
         // Country
-        GradCountry country = new GradCountry();
+        final GradCountry country = new GradCountry();
         country.setCountryCode("CA");
         country.setCountryName("Canada");
 
-        // Provice
-        GradProvince province = new GradProvince();
+        // Province
+        final GradProvince province = new GradProvince();
         province.setCountryCode("CA");
         province.setProvCode("BC");
         province.setProvName("British Columbia");
 
-        CriteriaHelper criteria = new CriteriaHelper();
-        schoolService.getSearchCriteria("minCode", "1234567", criteria);
-        schoolService.getSearchCriteria("schoolName", "Test School", criteria);
-
-        when(schoolTransformer.transformToDTO(schoolCriteriaQueryRepository.findByCriteria(criteria, SchoolEntity.class))).thenReturn(Arrays.asList(school));
-        when(districtTransformer.transformToDTO(districtRepository.findById("123"))).thenReturn(district);
+        when(schoolCriteriaQueryRepository.findByCriteria(any(CriteriaHelper.class), eq(SchoolEntity.class))).thenReturn(Arrays.asList(school));
+        when(districtRepository.findById(eq("123"))).thenReturn(Optional.of(district));
 
         when(this.webClient.get()).thenReturn(this.requestHeadersUriMock);
         when(this.requestHeadersUriMock.uri(eq(String.format(educSchoolApiConstants.getCountryByCountryCodeUrl(), country.getCountryCode())))).thenReturn(this.requestHeadersMock);
