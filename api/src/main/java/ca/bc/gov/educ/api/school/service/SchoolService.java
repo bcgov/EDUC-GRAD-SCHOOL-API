@@ -66,7 +66,9 @@ public class SchoolService {
         List<School> schoolList  = schoolTransformer.transformToDTO(schoolRepository.findAll());  
     	schoolList.forEach(sL -> {
     		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
-    		sL.setDistrictName(dist.getDistrictName());
+    		if (dist != null) {
+				sL.setDistrictName(dist.getDistrictName());
+			}
     	});
         return schoolList;
     }
@@ -104,7 +106,9 @@ public class SchoolService {
 		List<School> schoolList = schoolTransformer.transformToDTO(schoolCriteriaQueryRepository.findByCriteria(criteria, SchoolEntity.class));
     	schoolList.forEach(sL -> {
     		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
-    		sL.setDistrictName(dist.getDistrictName());
+    		if (dist != null) {
+				sL.setDistrictName(dist.getDistrictName());
+			}
     		GradCountry country = webClient.get()
 					.uri(String.format(educSchoolApiConstants.getCountryByCountryCodeUrl(), sL.getCountryCode()))
 					.headers(h -> h.setBearerAuth(accessToken))
