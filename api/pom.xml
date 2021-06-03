@@ -15,7 +15,7 @@
         <sonar.language>java</sonar.language>
         <sonar.exclusions>
             src/main/resources/**,src/main/java/ca/bc/gov/educ/api/school/exception/**,src/main/java/ca/bc/gov/educ/api/school/model/**,
-            src/main/java/ca/bc/gov/educ/api/codes/config/**,src/main/java/ca/bc/gov/educ/api/codes/util/**
+            src/main/java/ca/bc/gov/educ/api/school/config/**,src/main/java/ca/bc/gov/educ/api/school/util/**
         </sonar.exclusions>
         <java.version>11</java.version>
         <maven.compiler.version>3.8.0</maven.compiler.version>
