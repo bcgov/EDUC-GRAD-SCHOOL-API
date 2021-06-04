@@ -99,7 +99,7 @@ public class CriteriaQueryRepositoryImpl<T> implements CriteriaQueryRepository<T
 				predicates.add(cb.lessThanOrEqualTo(root.get(criteria.getColumn()), (Comparable) criteria.getValue()));
 				break;
 			case LIKE:
-				predicates.add(cb.like(root.get(criteria.getColumn()), criteria.getValue().toString()));
+				predicates.add(cb.like(root.get(criteria.getColumn()), "%"+criteria.getValue().toString()+"%"));
 				break;
 			case STARTS_WITH_IGNORE_CASE:
 				predicates.add(cb.like((Expression<String>) buildExpression(root, criteria.getColumn()), criteria.getValue() + "%"));
