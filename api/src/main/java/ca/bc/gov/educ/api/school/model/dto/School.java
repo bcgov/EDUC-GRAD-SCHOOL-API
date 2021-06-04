@@ -83,6 +83,21 @@ public class School {
 		return signatureDistrict != null ? signatureDistrict.trim(): null;
 	}
 	
+	public String getSchoolEmail() {
+		return  schoolEmail != null ? schoolEmail.trim(): null;
+	}
+	
+	public String getPrincipalName() {
+		return  principalName != null ? principalName.trim(): null;
+	}
+	
+	public String getAppendTrans() {
+		return  appendTrans != null ? appendTrans.trim(): null;
+	}
+	
+	public String getMinistryContact() {
+		return  ministryContact != null ? ministryContact.trim(): null;
+	}
 
 	@Override
 	public String toString() {
@@ -92,8 +107,9 @@ public class School {
 				+ mailerType + ", address1=" + address1 + ", address2=" + address2 + ", city=" + city + ", provCode="
 				+ provCode + ", provinceName=" + provinceName + ", countryCode=" + countryCode + ", countryName="
 				+ countryName + ", postal=" + postal + ", independentAffiliation=" + independentAffiliation
-				+ ", openFlag=" + openFlag + ", signatureDistrict=" + signatureDistrict + "]";
-	}
-
-	    
+				+ ", openFlag=" + openFlag + ", signatureDistrict=" + signatureDistrict + ", newMinCode=" + newMinCode
+				+ ", schoolOrg=" + schoolOrg + ", appendTrans=" + appendTrans + ", ministryContact=" + ministryContact
+				+ ", principalName=" + principalName + ", schoolPhone=" + schoolPhone + ", schoolFax=" + schoolFax
+				+ ", schoolEmail=" + schoolEmail + "]";
+	}	    
 }

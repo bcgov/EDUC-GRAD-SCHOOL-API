@@ -21,9 +21,9 @@ import ca.bc.gov.educ.api.school.model.transformer.SchoolTransformer;
 import ca.bc.gov.educ.api.school.repository.DistrictRepository;
 import ca.bc.gov.educ.api.school.repository.SchoolCriteriaQueryRepository;
 import ca.bc.gov.educ.api.school.repository.SchoolRepository;
-import ca.bc.gov.educ.api.school.repository.criteria.CriteriaHelper;
-import ca.bc.gov.educ.api.school.repository.criteria.GradCriteria.OperationEnum;
 import ca.bc.gov.educ.api.school.util.EducSchoolApiConstants;
+import ca.bc.gov.educ.api.school.util.criteria.CriteriaHelper;
+import ca.bc.gov.educ.api.school.util.criteria.GradCriteria.OperationEnum;
 
 @Service
 public class SchoolService {
@@ -51,6 +51,8 @@ public class SchoolService {
     
 	@Autowired
 	EducSchoolApiConstants educSchoolApiConstants;
+	
+	private static final String SCHOOL_NAME= "schoolName";
     
 
     @SuppressWarnings("unused")
@@ -101,8 +103,8 @@ public class SchoolService {
 
 	public List<School> getSchoolsByParams(String schoolName, String minCode,String accessToken) {    	
 		CriteriaHelper criteria = new CriteriaHelper();
-        getSearchCriteria("minCode", minCode, criteria);
-        getSearchCriteria("schoolName", schoolName, criteria);
+        getSearchCriteria("minCode", minCode, "minCode",criteria);
+        getSearchCriteria("schoolName", schoolName,"schoolName" ,criteria);
 		List<School> schoolList = schoolTransformer.transformToDTO(schoolCriteriaQueryRepository.findByCriteria(criteria, SchoolEntity.class));
     	schoolList.forEach(sL -> {
     		District dist = districtTransformer.transformToDTO(districtRepository.findById(sL.getMinCode().substring(0, 3)));
@@ -128,14 +130,24 @@ public class SchoolService {
     	});
     	return schoolList;
 	}
-	public CriteriaHelper getSearchCriteria(String roolElement, String value, CriteriaHelper criteria) {
-        if (StringUtils.isNotBlank(value)) {
-            if (StringUtils.contains(value, "*")) {
-                criteria.add(roolElement, OperationEnum.STARTS_WITH_IGNORE_CASE, StringUtils.strip(value.toUpperCase(), "*"));
-            } else {
-                criteria.add(roolElement, OperationEnum.EQUALS, value.toUpperCase());
+	public CriteriaHelper getSearchCriteria(String roolElement, String value, String parameterType, CriteriaHelper criteria) {
+		if(parameterType.equalsIgnoreCase(SCHOOL_NAME)) {
+        	if (StringUtils.isNotBlank(value)) {
+                if (StringUtils.contains(value, "*")) {
+                    criteria.add(roolElement, OperationEnum.LIKE, StringUtils.strip(value.toUpperCase(), "*"));
+                } else {
+                    criteria.add(roolElement, OperationEnum.EQUALS, value.toUpperCase());
+                }
             }
-        }
+		}else {	       
+        	if (StringUtils.isNotBlank(value)) {
+                if (StringUtils.contains(value, "*")) {
+                    criteria.add(roolElement, OperationEnum.STARTS_WITH_IGNORE_CASE, StringUtils.strip(value.toUpperCase(), "*"));
+                } else {
+                    criteria.add(roolElement, OperationEnum.EQUALS, value.toUpperCase());
+                }
+            }	        	
+	    }
         return criteria;
     }
 }
