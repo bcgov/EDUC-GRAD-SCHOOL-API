@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.school.repository.criteria;
+package ca.bc.gov.educ.api.school.util.criteria;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.Logger;
 
-import ca.bc.gov.educ.api.school.repository.criteria.GradCriteria.OperationEnum;
+import ca.bc.gov.educ.api.school.util.criteria.GradCriteria.OperationEnum;
 
 public class CriteriaHelper {
 

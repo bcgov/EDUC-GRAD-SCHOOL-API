@@ -1,4 +1,4 @@
-package ca.bc.gov.educ.api.school.repository.criteria;
+package ca.bc.gov.educ.api.school.util.criteria;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import org.hibernate.query.criteria.internal.path.PluralAttributePath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import ca.bc.gov.educ.api.school.repository.criteria.GradCriteria.OperationEnum;
+import ca.bc.gov.educ.api.school.util.criteria.GradCriteria.OperationEnum;
 
 @Repository
 public class CriteriaQueryRepositoryImpl<T> implements CriteriaQueryRepository<T> {
