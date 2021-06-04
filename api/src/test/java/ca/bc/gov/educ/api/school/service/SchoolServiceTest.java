@@ -1,15 +1,17 @@
 package ca.bc.gov.educ.api.school.service;
 
-import ca.bc.gov.educ.api.school.model.dto.GradCountry;
-import ca.bc.gov.educ.api.school.model.dto.GradProvince;
-import ca.bc.gov.educ.api.school.model.dto.School;
-import ca.bc.gov.educ.api.school.model.entity.DistrictEntity;
-import ca.bc.gov.educ.api.school.model.entity.SchoolEntity;
-import ca.bc.gov.educ.api.school.repository.DistrictRepository;
-import ca.bc.gov.educ.api.school.repository.SchoolCriteriaQueryRepository;
-import ca.bc.gov.educ.api.school.repository.SchoolRepository;
-import ca.bc.gov.educ.api.school.repository.criteria.CriteriaHelper;
-import ca.bc.gov.educ.api.school.util.EducSchoolApiConstants;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,19 +24,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import ca.bc.gov.educ.api.school.model.dto.GradCountry;
+import ca.bc.gov.educ.api.school.model.dto.GradProvince;
+import ca.bc.gov.educ.api.school.model.dto.School;
+import ca.bc.gov.educ.api.school.model.entity.DistrictEntity;
+import ca.bc.gov.educ.api.school.model.entity.SchoolEntity;
+import ca.bc.gov.educ.api.school.repository.DistrictRepository;
+import ca.bc.gov.educ.api.school.repository.SchoolCriteriaQueryRepository;
+import ca.bc.gov.educ.api.school.repository.SchoolRepository;
+import ca.bc.gov.educ.api.school.util.EducSchoolApiConstants;
+import ca.bc.gov.educ.api.school.util.criteria.CriteriaHelper;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
