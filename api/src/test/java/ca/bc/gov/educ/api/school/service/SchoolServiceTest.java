@@ -205,7 +205,7 @@ public class SchoolServiceTest {
         when(this.requestHeadersMock.retrieve()).thenReturn(this.responseMock);
         when(this.responseMock.bodyToMono(GradProvince.class)).thenReturn(Mono.just(province));
 
-        var result = schoolService.getSchoolsByParams("Test School", "1234567", "accessToken");
+        var result = schoolService.getSchoolsByParams("Test School", "1234567");
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0).getMinCode()).isEqualTo("1234567");

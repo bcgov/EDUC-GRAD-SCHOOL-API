@@ -1,8 +1,9 @@
 package ca.bc.gov.educ.api.school.controller;
 
-import ca.bc.gov.educ.api.school.model.dto.School;
-import ca.bc.gov.educ.api.school.service.SchoolService;
-import ca.bc.gov.educ.api.school.util.ResponseHelper;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -16,9 +17,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import ca.bc.gov.educ.api.school.model.dto.School;
+import ca.bc.gov.educ.api.school.service.SchoolService;
+import ca.bc.gov.educ.api.school.util.ResponseHelper;
 
 @RunWith(MockitoJUnitRunner.class)
 @ExtendWith(MockitoExtension.class)
@@ -76,17 +77,8 @@ public class SchoolControllerTest {
         final School school = new School();
         school.setMinCode("1234567");
         school.setSchoolName("Test School");
-
-        Authentication authentication = Mockito.mock(Authentication.class);
-        OAuth2AuthenticationDetails details = Mockito.mock(OAuth2AuthenticationDetails.class);
-        // Mockito.whens() for your authorization object
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        Mockito.when(authentication.getDetails()).thenReturn(details);
-        SecurityContextHolder.setContext(securityContext);
-
-        Mockito.when(schoolService.getSchoolsByParams("1234567", "123", null)).thenReturn(Arrays.asList(school));
+        Mockito.when(schoolService.getSchoolsByParams("1234567", "123")).thenReturn(Arrays.asList(school));
         schoolController.getSchoolsByParams("1234567", "123");
-        Mockito.verify(schoolService).getSchoolsByParams("1234567", "123", null);
+        Mockito.verify(schoolService).getSchoolsByParams("1234567", "123");
     }
 }
