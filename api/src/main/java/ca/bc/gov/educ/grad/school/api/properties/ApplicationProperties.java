@@ -17,8 +17,13 @@ public class ApplicationProperties {
   @Value("${nats.url}")
   String natsUrl;
 
-
   @Value("${nats.maxReconnect}")
   Integer natsMaxReconnect;
+
+  @Value("${nats.server}")
+  private String server;
+
+  @Value("${nats.connectionName}")
+  private String connectionName;
 
 }

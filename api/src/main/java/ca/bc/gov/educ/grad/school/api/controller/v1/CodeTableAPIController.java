@@ -2,6 +2,8 @@ package ca.bc.gov.educ.grad.school.api.controller.v1;
 
 import ca.bc.gov.educ.grad.school.api.endpoint.v1.CodeTableAPIEndpoint;
 import ca.bc.gov.educ.grad.school.api.mapper.v1.CodeTableMapper;
+import ca.bc.gov.educ.grad.school.api.service.v1.CodeTableService;
+import ca.bc.gov.educ.grad.school.api.struct.v1.SubmissionModeCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +27,7 @@ public class CodeTableAPIController implements CodeTableAPIEndpoint {
   }
 
   public List<SubmissionModeCode> getSubmissionModeCodes() {
-    return getService().getSubmissionModeCodesList().stream().map(mapper::toStructure).collect(Collectors.toList());
+    return getService().getAllSubmissionModeCodes().stream().map(mapper::toStructure).collect(Collectors.toList());
   }
 
 }

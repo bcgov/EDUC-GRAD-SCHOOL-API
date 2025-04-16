@@ -18,7 +18,7 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping(URL.BASE_URL_SCHOOL)
+@RequestMapping(URL.BASE_URL)
 public interface GradSchoolAPIEndpoint {
 
   @GetMapping("/{gradSchoolID}")
@@ -59,7 +59,5 @@ public interface GradSchoolAPIEndpoint {
   @Tag(name = "GRAD School Entity", description = "Endpoints for grad school entity.")
   @Schema(name = "GradSchool", implementation = GradSchool.class)
   List<GradSchool> getAllGradSchools();
-
-
-
+  
 }
