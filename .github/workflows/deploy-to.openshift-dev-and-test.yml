@@ -38,8 +38,8 @@ env:
   MAX_REPLICAS_DEV: "2"
   MIN_REPLICAS_TEST: "1"
   MAX_REPLICAS_TEST: "2"
-  MIN_CPU: "100m"
-  MAX_CPU: "150m"
+  MIN_CPU: "200m"
+  MAX_CPU: "400m"
   MIN_MEM: "256Mi"
   MAX_MEM: "512Mi"
 
