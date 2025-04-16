@@ -1,28 +1,28 @@
 CREATE TABLE GRAD_SCHOOL
 (
-    GRAD_SCHOOL_ID                      UUID NOT NULL,
-    SCHOOL_ID                           UUID NOT NULL,
-    SUBMISSION_MODE_CODE                VARCHAR(10) NOT NULL,
-    CAN_ISSUE_TRANSCRIPTS               BOOLEAN NOT NULL,
-    CAN_ISSUE_CERTIFICATES              BOOLEAN NOT NULL,
-    CREATE_USER                         VARCHAR(32)         NOT NULL,
+    GRAD_SCHOOL_ID                      RAW(16) NOT NULL,
+    SCHOOL_ID                           RAW(16) NOT NULL,
+    SUBMISSION_MODE_CODE                VARCHAR2(10) NOT NULL,
+    CAN_ISSUE_TRANSCRIPTS               CHAR(1) NOT NULL,
+    CAN_ISSUE_CERTIFICATES              CHAR(1) NOT NULL,
+    CREATE_USER                         VARCHAR2(32)         NOT NULL,
     CREATE_DATE                         TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    UPDATE_USER                         VARCHAR(32)         NOT NULL,
+    UPDATE_USER                         VARCHAR2(32)         NOT NULL,
     UPDATE_DATE                         TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT GRAD_SCHOOL_ID_PK PRIMARY KEY (GRAD_SCHOOL_ID)
 );
 
 CREATE TABLE GRAD_SCHOOL_HISTORY
 (
-    GRAD_SCHOOL_HISTORY_ID              UUID NOT NULL,
-    GRAD_SCHOOL_ID                      UUID NOT NULL,
-    SCHOOL_ID                           UUID NOT NULL,
-    SUBMISSION_MODE                     VARCHAR(10) NOT NULL,
-    TRANSCRIPT_ELIGIBILITY              BOOLEAN NOT NULL,
-    CERTIFICATE_ELIGIBILITY             BOOLEAN NOT NULL,
-    CREATE_USER                         VARCHAR(32)         NOT NULL,
+    GRAD_SCHOOL_HISTORY_ID              RAW(16) NOT NULL,
+    GRAD_SCHOOL_ID                      RAW(16) NOT NULL,
+    SCHOOL_ID                           RAW(16) NOT NULL,
+    SUBMISSION_MODE                     VARCHAR2(10) NOT NULL,
+    TRANSCRIPT_ELIGIBILITY              CHAR(1) NOT NULL,
+    CERTIFICATE_ELIGIBILITY             CHAR(1) NOT NULL,
+    CREATE_USER                         VARCHAR2(32)         NOT NULL,
     CREATE_DATE                         TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    UPDATE_USER                         VARCHAR(32)         NOT NULL,
+    UPDATE_USER                         VARCHAR2(32)         NOT NULL,
     UPDATE_DATE                         TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT GRAD_SCHOOL_HISTORY_ID_PK PRIMARY KEY (GRAD_SCHOOL_HISTORY_ID)
 );
@@ -31,15 +31,15 @@ CREATE TABLE GRAD_SCHOOL_HISTORY
 
 CREATE TABLE SUBMISSION_MODE_CODE
 (
-    SUBMISSION_MODE_CODE              VARCHAR(10)           NOT NULL,
-    LABEL                             VARCHAR(30) NOT NULL,
-    DESCRIPTION                       VARCHAR(255) NOT NULL,
-    DISPLAY_ORDER                     NUMERIC DEFAULT 1       NOT NULL,
+    SUBMISSION_MODE_CODE              VARCHAR2(10)           NOT NULL,
+    LABEL                             VARCHAR2(30) NOT NULL,
+    DESCRIPTION                       VARCHAR2(255) NOT NULL,
+    DISPLAY_ORDER                     NUMBER DEFAULT 1       NOT NULL,
     EFFECTIVE_DATE                    TIMESTAMP                   NOT NULL,
     EXPIRY_DATE                       TIMESTAMP                   NOT NULL,
-    CREATE_USER                       VARCHAR(32)           NOT NULL,
+    CREATE_USER                       VARCHAR2(32)           NOT NULL,
     CREATE_DATE                       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    UPDATE_USER                       VARCHAR(32)           NOT NULL,
+    UPDATE_USER                       VARCHAR2(32)           NOT NULL,
     UPDATE_DATE                       TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT SUBMISSION_MODE_CODE_PK PRIMARY KEY (SUBMISSION_MODE_CODE)
 );
