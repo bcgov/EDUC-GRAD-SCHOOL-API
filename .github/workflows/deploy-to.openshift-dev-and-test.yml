@@ -178,7 +178,7 @@ jobs:
           | oc apply -f -
         
         # Update ConfigMap
-        curl -s https://raw.githubusercontent.com/bcgov/${{ env.REPO_NAME }}/master/tools/config/update-configmap.sh | bash /dev/stdin dev ${{ env.APP_NAME }} ${{ env.NAMESPACE }} ${{ env.COMMON_NAMESPACE }} ${{ env.DB_JDBC_CONNECT_STRING }} "${{ env.DB_PWD }}" ${{ env.DB_USER }} ${{ env.SPLUNK_TOKEN }}
+        #curl -s https://raw.githubusercontent.com/bcgov/${{ env.REPO_NAME }}/master/tools/config/update-configmap.sh | bash /dev/stdin dev ${{ env.APP_NAME }} ${{ env.NAMESPACE }} ${{ env.COMMON_NAMESPACE }} ${{ env.DB_JDBC_CONNECT_STRING }} "${{ env.DB_PWD }}" ${{ env.DB_USER }} ${{ env.SPLUNK_TOKEN }}
         
         # Restart the deployment to recreate pods
         oc rollout restart deployment/${{ env.SPRING_BOOT_IMAGE_NAME }}
