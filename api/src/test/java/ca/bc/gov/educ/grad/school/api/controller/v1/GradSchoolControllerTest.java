@@ -40,13 +40,7 @@ public class GradSchoolControllerTest {
   private MockMvc mockMvc;
 
   @Autowired
-  CodeTableAPIController controller;
-
-  @Autowired
   GradSchoolRepository gradSchoolRepository;
-
-  @Autowired
-  GradSchoolHistoryRepository gradSchoolHistoryRepository;
 
   @Autowired
   SubmissionModeCodeRepository submissionModeCodeRepository;

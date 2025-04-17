@@ -37,6 +37,23 @@ public interface GradSchoolAPIEndpoint {
   @Schema(name = "SchoolHistory", implementation = GradSchoolHistory.class)
   List<GradSchoolHistory> getGradSchoolHistory(@PathVariable("gradSchoolID")  UUID gradSchoolID);
 
+
+  @GetMapping("/search/{schoolID}")
+  @PreAuthorize("hasAuthority('SCOPE_READ_GRAD_SCHOOL')")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "404", description = "NOT FOUND")})
+  @Transactional(readOnly = true)
+  @Tag(name = "School Entity", description = "Endpoints for school entity.")
+  @Schema(name = "School", implementation = GradSchool.class)
+  GradSchool getGradSchoolBySchoolID(@PathVariable("schoolID")  UUID schoolID);
+
+  @GetMapping("/search/{schoolID}/history")
+  @PreAuthorize("hasAuthority('SCOPE_READ_GRAD_SCHOOL')")
+  @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"), @ApiResponse(responseCode = "404", description = "NOT FOUND")})
+  @Transactional(readOnly = true)
+  @Tag(name = "School History Entity", description = "Endpoints for school history entity.")
+  @Schema(name = "SchoolHistory", implementation = GradSchoolHistory.class)
+  List<GradSchoolHistory> getGradSchoolHistoryBySchoolID(@PathVariable("schoolID")  UUID schoolID);
+
   @PostMapping
   @PreAuthorize("hasAuthority('SCOPE_WRITE_GRAD_SCHOOL')")
   @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "CREATED"), @ApiResponse(responseCode = "400", description = "BAD REQUEST")})

@@ -35,6 +35,10 @@ public class GradSchoolHistoryService {
   }
 
   public List<GradSchoolHistoryEntity> getAllGradSchoolHistoryList(UUID gradSchoolID) {
-    return gradSchoolHistoryRepository.findAllBySchoolID(gradSchoolID);
+    return gradSchoolHistoryRepository.findAllByGradSchoolID(gradSchoolID);
+  }
+
+  public List<GradSchoolHistoryEntity> getAllGradSchoolHistoryListBySchoolID(UUID schoolID) {
+    return gradSchoolHistoryRepository.findAllBySchoolID(schoolID);
   }
 }

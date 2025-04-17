@@ -12,4 +12,6 @@ import java.util.UUID;
 @Repository
 public interface GradSchoolHistoryRepository extends JpaRepository<GradSchoolHistoryEntity, UUID>, JpaSpecificationExecutor<GradSchoolHistoryEntity> {
     List<GradSchoolHistoryEntity> findAllBySchoolID(UUID schoolID);
+
+    List<GradSchoolHistoryEntity> findAllByGradSchoolID(UUID gradSchoolID);
 }

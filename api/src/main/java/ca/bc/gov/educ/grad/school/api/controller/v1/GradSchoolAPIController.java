@@ -39,6 +39,16 @@ public class GradSchoolAPIController implements GradSchoolAPIEndpoint {
   }
 
   @Override
+  public GradSchool getGradSchoolBySchoolID(UUID schoolID) {
+    return mapper.toStructure(gradSchoolService.getGradSchoolBySchoolID(schoolID));
+  }
+
+  @Override
+  public List<GradSchoolHistory> getGradSchoolHistoryBySchoolID(UUID schoolID) {
+    return gradSchoolHistoryService.getAllGradSchoolHistoryListBySchoolID(schoolID).stream().map(mapper::toStructure).toList();
+  }
+
+  @Override
   public GradSchool createGradSchool(GradSchool gradSchool) {
     return mapper.toStructure(gradSchoolService.createGradSchool(gradSchool));
   }

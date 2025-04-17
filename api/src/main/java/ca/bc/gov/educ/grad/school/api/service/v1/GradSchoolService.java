@@ -30,6 +30,8 @@ public class GradSchoolService {
 
   private static final String GRAD_SCHOOL_ID_ATTR = "gradSchoolID";
 
+  private static final String SCHOOL_ID_ATTR = "schoolID";
+
   private static final String CREATE_DATE = "createDate";
 
   private static final String CREATE_USER = "createUser";
@@ -49,6 +51,11 @@ public class GradSchoolService {
   public GradSchoolEntity getGradSchool(UUID gradSchoolID) {
     return gradSchoolRepository.findById(gradSchoolID).orElseThrow(
             () -> new EntityNotFoundException(GradSchoolEntity.class, GRAD_SCHOOL_ID_ATTR, gradSchoolID.toString()));
+  }
+
+  public GradSchoolEntity getGradSchoolBySchoolID(UUID schoolID) {
+    return gradSchoolRepository.findBySchoolID(schoolID).orElseThrow(
+            () -> new EntityNotFoundException(GradSchoolEntity.class, SCHOOL_ID_ATTR, schoolID.toString()));
   }
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
