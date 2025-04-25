@@ -1,6 +1,5 @@
 package ca.bc.gov.educ.grad.school.api.repository.v1;
 
-import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEntity;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolHistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

@@ -1,16 +1,19 @@
 package ca.bc.gov.educ.grad.school.api.service.v1;
 
+import ca.bc.gov.educ.grad.school.api.constants.v1.EventOutcome;
 import ca.bc.gov.educ.grad.school.api.exception.EntityNotFoundException;
 import ca.bc.gov.educ.grad.school.api.exception.InvalidPayloadException;
 import ca.bc.gov.educ.grad.school.api.exception.errors.ApiError;
 import ca.bc.gov.educ.grad.school.api.mapper.v1.GradSchoolMapper;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEntity;
+import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEventEntity;
+import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolEventRepository;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolRepository;
 import ca.bc.gov.educ.grad.school.api.struct.v1.GradSchool;
-import ca.bc.gov.educ.grad.school.api.util.RequestUtil;
-import ca.bc.gov.educ.grad.school.api.util.TransformUtil;
-import ca.bc.gov.educ.grad.school.api.util.ValidationUtil;
+import ca.bc.gov.educ.grad.school.api.util.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static ca.bc.gov.educ.grad.school.api.constants.v1.EventType.UPDATE_GRAD_SCHOOL;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Service
@@ -36,10 +40,13 @@ public class GradSchoolService {
 
   private static final String CREATE_USER = "createUser";
 
+  private final GradSchoolEventRepository gradSchoolEventRepository;
   private final GradSchoolRepository gradSchoolRepository;
   private final GradSchoolHistoryService gradSchoolHistoryService;
+  private static final GradSchoolMapper gradSchoolMapper = GradSchoolMapper.mapper;
 
-  public GradSchoolService(GradSchoolRepository gradSchoolRepository, GradSchoolHistoryService gradSchoolHistoryService) {
+  public GradSchoolService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository, GradSchoolHistoryService gradSchoolHistoryService) {
+      this.gradSchoolEventRepository = gradSchoolEventRepository;
       this.gradSchoolRepository = gradSchoolRepository;
       this.gradSchoolHistoryService = gradSchoolHistoryService;
   }
@@ -76,14 +83,21 @@ public class GradSchoolService {
   }
 
   @Transactional(propagation = Propagation.REQUIRES_NEW)
-  public GradSchoolEntity updateGradSchool(GradSchool gradSchool, UUID gradSchoolID) {
+  public Pair<GradSchoolEntity, GradSchoolEventEntity> updateGradSchool(GradSchool gradSchool, UUID gradSchoolID) throws JsonProcessingException {
     RequestUtil.setAuditColumnsForUpdate(gradSchool);
     var school = GradSchoolMapper.mapper.toModel(gradSchool);
     if (gradSchoolID == null || !gradSchoolID.equals(school.getGradSchoolID())) {
       throw new EntityNotFoundException(GradSchoolEntity.class, GRAD_SCHOOL_ID_ATTR, String.valueOf(gradSchoolID));
     }
 
-    return updateGradSchoolHelper(school);
+    var updatedSchool = updateGradSchoolHelper(school);
+
+    final GradSchoolEventEntity gradSchoolEventEntity = EventUtil.createEvent(
+            updatedSchool.getUpdateUser(), updatedSchool.getUpdateUser(),
+            JsonUtil.getJsonStringFromObject(gradSchoolMapper.toStructure(updatedSchool)),
+            UPDATE_GRAD_SCHOOL, EventOutcome.GRAD_SCHOOL_UPDATED);
+    gradSchoolEventRepository.save(gradSchoolEventEntity);
+    return Pair.of(updatedSchool, gradSchoolEventEntity);
   }
 
   private GradSchoolEntity updateGradSchoolHelper(GradSchoolEntity school) {

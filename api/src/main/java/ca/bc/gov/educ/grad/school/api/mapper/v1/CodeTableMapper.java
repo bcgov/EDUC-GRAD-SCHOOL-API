@@ -16,8 +16,6 @@ public interface CodeTableMapper {
 
   CodeTableMapper mapper = Mappers.getMapper(CodeTableMapper.class);
 
-  SubmissionModeCodeEntity toModel(SubmissionModeCode structure);
-
   SubmissionModeCode toStructure(SubmissionModeCodeEntity entity);
 
 }
