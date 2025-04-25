@@ -36,11 +36,11 @@ public class GradSchoolEntity {
 
   @Column(name = "CAN_ISSUE_TRANSCRIPTS")
   @UpperCase
-  private Boolean canIssueTranscripts;
+  private String canIssueTranscripts;
 
   @Column(name = "CAN_ISSUE_CERTIFICATES")
   @UpperCase
-  private Boolean canIssueCertificates;
+  private String canIssueCertificates;
 
   @Column(name = "CREATE_USER", updatable = false)
   String createUser;
