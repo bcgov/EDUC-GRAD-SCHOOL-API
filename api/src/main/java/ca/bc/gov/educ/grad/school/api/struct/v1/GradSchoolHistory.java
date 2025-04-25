@@ -25,8 +25,8 @@ public class GradSchoolHistory extends BaseRequest implements Serializable {
   private String submissionModeCode;
 
   @NotNull
-  private Boolean canIssueTranscripts;
+  private String canIssueTranscripts;
 
   @NotNull
-  private Boolean canIssueCertificates;
+  private String canIssueCertificates;
 }

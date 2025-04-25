@@ -64,8 +64,8 @@ public class GradSchoolControllerTest {
     GradSchool gradSchool = new GradSchool();
     gradSchool.setSchoolID(UUID.randomUUID());
     gradSchool.setSubmissionModeCode("REPLACE");
-    gradSchool.setCanIssueTranscripts(false);
-    gradSchool.setCanIssueCertificates(false);
+    gradSchool.setCanIssueTranscripts("N");
+    gradSchool.setCanIssueCertificates("N");
     gradSchool.setCreateUser("ABC");
     gradSchool.setUpdateUser("ABC");
 
