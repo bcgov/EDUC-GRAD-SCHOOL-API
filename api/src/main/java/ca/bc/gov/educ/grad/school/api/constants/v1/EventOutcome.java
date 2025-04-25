@@ -6,6 +6,6 @@ package ca.bc.gov.educ.grad.school.api.constants.v1;
 public enum EventOutcome {
 
   GRAD_SCHOOL_CREATED,
-
+  SCHOOL_CREATED,
   GRAD_SCHOOL_UPDATED
 }
