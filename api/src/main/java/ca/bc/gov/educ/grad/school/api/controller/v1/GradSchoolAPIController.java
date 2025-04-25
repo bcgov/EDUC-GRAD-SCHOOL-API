@@ -2,6 +2,7 @@ package ca.bc.gov.educ.grad.school.api.controller.v1;
 
 import ca.bc.gov.educ.grad.school.api.endpoint.v1.GradSchoolAPIEndpoint;
 import ca.bc.gov.educ.grad.school.api.mapper.v1.GradSchoolMapper;
+import ca.bc.gov.educ.grad.school.api.messaging.jetstream.Publisher;
 import ca.bc.gov.educ.grad.school.api.service.v1.GradSchoolHistoryService;
 import ca.bc.gov.educ.grad.school.api.service.v1.GradSchoolService;
 import ca.bc.gov.educ.grad.school.api.struct.v1.GradSchool;
@@ -17,13 +18,16 @@ import java.util.UUID;
 @Slf4j
 public class GradSchoolAPIController implements GradSchoolAPIEndpoint {
 
+  private final Publisher publisher;
+
   private static final GradSchoolMapper mapper = GradSchoolMapper.mapper;
 
   private final GradSchoolService gradSchoolService;
 
   private final GradSchoolHistoryService gradSchoolHistoryService;
 
-  public GradSchoolAPIController(GradSchoolService gradSchoolService, GradSchoolHistoryService gradSchoolHistoryService) {
+  public GradSchoolAPIController(Publisher publisher, GradSchoolService gradSchoolService, GradSchoolHistoryService gradSchoolHistoryService) {
+      this.publisher = publisher;
       this.gradSchoolService = gradSchoolService;
       this.gradSchoolHistoryService = gradSchoolHistoryService;
   }
@@ -55,7 +59,9 @@ public class GradSchoolAPIController implements GradSchoolAPIEndpoint {
 
   @Override
   public GradSchool updateGradSchool(UUID gradSchoolID, GradSchool gradSchool) throws JsonProcessingException {
-    return mapper.toStructure(gradSchoolService.updateGradSchool(gradSchool, gradSchoolID));
+    var updatePair = gradSchoolService.updateGradSchool(gradSchool, gradSchoolID);
+    publisher.dispatchChoreographyEvent(updatePair.getRight());
+    return mapper.toStructure(updatePair.getLeft());
   }
 
   @Override

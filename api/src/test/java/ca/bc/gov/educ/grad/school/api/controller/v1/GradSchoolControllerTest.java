@@ -3,7 +3,6 @@ package ca.bc.gov.educ.grad.school.api.controller.v1;
 import ca.bc.gov.educ.grad.school.api.GradSchoolApiResourceApplication;
 import ca.bc.gov.educ.grad.school.api.constants.v1.URL;
 import ca.bc.gov.educ.grad.school.api.model.v1.SubmissionModeCodeEntity;
-import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolHistoryRepository;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolRepository;
 import ca.bc.gov.educ.grad.school.api.repository.v1.SubmissionModeCodeRepository;
 import ca.bc.gov.educ.grad.school.api.struct.v1.GradSchool;
