@@ -12,9 +12,7 @@ import java.util.UUID;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GradSchool extends BaseRequest implements Serializable {
-  /**
-   * The constant serialVersionUID.
-   */
+
   private static final long serialVersionUID = 1L;
 
   private UUID gradSchoolID;
@@ -26,10 +24,9 @@ public class GradSchool extends BaseRequest implements Serializable {
   private String submissionModeCode;
 
   @NotNull
-  private Boolean canIssueTranscripts;
+  private String canIssueTranscripts;
 
   @NotNull
-  private Boolean canIssueCertificates;
-
+  private String canIssueCertificates;
 
 }
