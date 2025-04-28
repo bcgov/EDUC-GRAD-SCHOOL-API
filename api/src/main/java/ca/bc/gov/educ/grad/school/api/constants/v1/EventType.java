@@ -5,5 +5,7 @@ public enum EventType {
 
   CREATE_SCHOOL,
 
+  UPDATE_SCHOOL,
+
   UPDATE_GRAD_SCHOOL
 }

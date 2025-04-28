@@ -2,6 +2,7 @@ package ca.bc.gov.educ.grad.school.api.struct.v1.external.institute;
 
 import ca.bc.gov.educ.grad.school.api.struct.v1.BaseRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -77,4 +79,9 @@ public class School extends BaseRequest implements Serializable {
 
   private Boolean canIssueCertificates;
 
+  @Valid
+  private List<SchoolGrade> grades;
+
+  @Valid
+  private List<IndependentSchoolFundingGroup> schoolFundingGroups;
 }
