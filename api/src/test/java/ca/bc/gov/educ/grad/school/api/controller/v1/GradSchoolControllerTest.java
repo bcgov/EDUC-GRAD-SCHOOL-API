@@ -79,8 +79,8 @@ public class GradSchoolControllerTest {
       .andExpect(status().isCreated())
       .andExpect(MockMvcResultMatchers.jsonPath("$.schoolID").exists())
       .andExpect(MockMvcResultMatchers.jsonPath("$.submissionModeCode").value("REPLACE"))
-      .andExpect(MockMvcResultMatchers.jsonPath("$.canIssueCertificates").value(false))
-      .andExpect(MockMvcResultMatchers.jsonPath("$.canIssueTranscripts").value(false));
+      .andExpect(MockMvcResultMatchers.jsonPath("$.canIssueCertificates").value("N"))
+      .andExpect(MockMvcResultMatchers.jsonPath("$.canIssueTranscripts").value("N"));
   }
 
   public static String asJsonString(final Object obj) {

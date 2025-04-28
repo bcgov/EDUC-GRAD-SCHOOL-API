@@ -43,9 +43,10 @@ public class SchoolCreateService extends BaseService<School> {
         var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
         if(!optGradSchool.isPresent()) {
             GradSchoolEntity newGradSchool = new GradSchoolEntity();
+            setTranscriptAndCertificateFlags(school, newGradSchool);
             newGradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
-            newGradSchool.setCanIssueCertificates("N");
-            newGradSchool.setCanIssueTranscripts("N");
+            newGradSchool.setCanIssueTranscripts(school.getCanIssueTranscripts() != null && school.getCanIssueTranscripts() ? "Y" : "N");
+            newGradSchool.setCanIssueCertificates(school.getCanIssueCertificates() != null && school.getCanIssueCertificates() ? "Y" : "N");
             newGradSchool.setSubmissionModeCode(SubmissionModeCode.REPLACE.toString());
             newGradSchool.setCreateUser(school.getCreateUser());
             newGradSchool.setUpdateDate(LocalDateTime.now());
