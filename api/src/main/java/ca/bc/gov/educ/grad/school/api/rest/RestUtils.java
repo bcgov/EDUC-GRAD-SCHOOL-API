@@ -1,6 +1,7 @@
 package ca.bc.gov.educ.grad.school.api.rest;
 
 
+import ca.bc.gov.educ.grad.school.api.exception.GradSchoolAPIRuntimeException;
 import ca.bc.gov.educ.grad.school.api.properties.ApplicationProperties;
 import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.SchoolHistory;
 import lombok.Getter;
@@ -49,8 +50,8 @@ public class RestUtils {
               .bodyToMono(new ParameterizedTypeReference<Page<SchoolHistory>>() {})
               .block();
     } catch (Exception ex) {
-      log.error("Error fetching school history on page {}", 0, ex);
-      return null;
+      log.error("Error fetching school history on page {} {}", 0, ex);
+      throw new GradSchoolAPIRuntimeException("Error fetching school history on page 0  " + ex.getMessage());
     }
   }
 }
