@@ -27,4 +27,15 @@ public class ApplicationProperties {
   @Value("${nats.connectionName}")
   private String connectionName;
 
+  @Value("${url.api.institute}")
+  private String instituteApiURL;
+
+  @Value("${url.token}")
+  private String tokenURL;
+
+  @Value("${client.id}")
+  private String clientID;
+
+  @Value("${client.secret}")
+  private String clientSecret;
 }

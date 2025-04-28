@@ -69,7 +69,6 @@ public class GradSchoolControllerTest {
     gradSchool.setCreateUser("ABC");
     gradSchool.setUpdateUser("ABC");
 
-
     this.mockMvc.perform(post(URL.BASE_URL)
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)

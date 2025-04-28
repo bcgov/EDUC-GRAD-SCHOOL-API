@@ -41,12 +41,10 @@ public class SchoolCreateService extends BaseService<School> {
         log.info("Received and processing event: " + event.getEventId());
 
         var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
-        if(!optGradSchool.isPresent()) {
+        if(!optGradSchool.isPresent() && !school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")) {
             GradSchoolEntity newGradSchool = new GradSchoolEntity();
             setTranscriptAndCertificateFlags(school, newGradSchool);
             newGradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
-            newGradSchool.setCanIssueTranscripts(school.getCanIssueTranscripts() != null && school.getCanIssueTranscripts() ? "Y" : "N");
-            newGradSchool.setCanIssueCertificates(school.getCanIssueCertificates() != null && school.getCanIssueCertificates() ? "Y" : "N");
             newGradSchool.setSubmissionModeCode(SubmissionModeCode.REPLACE.toString());
             newGradSchool.setCreateUser(school.getCreateUser());
             newGradSchool.setUpdateDate(LocalDateTime.now());
@@ -54,7 +52,7 @@ public class SchoolCreateService extends BaseService<School> {
             newGradSchool.setUpdateUser(school.getCreateUser());
             gradSchoolRepository.save(newGradSchool);
         }else{
-            log.info("Ignoring choreography update event with ID {} :: payload is: {} :: school already exists in the service", event.getEventId(), school);
+            log.info("Ignoring choreography update event with ID {} :: payload is: {} :: school already exists or is FED_BAND in the service", event.getEventId(), school);
         }
         this.updateEvent(event);
     }
