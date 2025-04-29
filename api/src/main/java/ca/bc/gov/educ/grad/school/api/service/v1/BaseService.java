@@ -5,12 +5,14 @@ import ca.bc.gov.educ.grad.school.api.constants.v1.EventStatus;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEntity;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEventEntity;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolEventRepository;
+import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.IndependentSchoolFundingGroup;
 import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.School;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -33,10 +35,21 @@ public abstract class BaseService<T> implements EventService<T> {
         Set<String> summerShortPRPArray = new HashSet<>(Arrays.asList("SHORT_PRP","SUMMER"));
         var canIssueTranscripts = false;
         var canIssueCertificates = false;
+        List<IndependentSchoolFundingGroup> grade10toSUFundingCodes = null;
+        var schoolHas10toSUGrades = false;
+        var hasGroup1or2or4 = false;
 
-        var grade10toSUFundingCodes = school.getSchoolFundingGroups().stream().filter(group -> gradesArray.contains(group.getSchoolGradeCode()));
-        var schoolHas10toSUGrades = school.getGrades().stream().anyMatch(grade -> gradesArray.contains(grade.getSchoolGradeCode()));
-        var hasGroup1or2or4 = grade10toSUFundingCodes.anyMatch(group -> groupsArray.contains(group.getSchoolFundingGroupCode()));
+
+        if(school.getSchoolFundingGroups() != null) {
+            grade10toSUFundingCodes = school.getSchoolFundingGroups().stream().filter(group -> gradesArray.contains(group.getSchoolGradeCode())).toList();
+        }
+        if(school.getGrades() != null) {
+            schoolHas10toSUGrades = school.getGrades().stream().anyMatch(grade -> gradesArray.contains(grade.getSchoolGradeCode()));
+        }
+
+        if(grade10toSUFundingCodes != null) {
+            hasGroup1or2or4 = grade10toSUFundingCodes.stream().anyMatch(group -> groupsArray.contains(group.getSchoolFundingGroupCode()));
+        }
 
         switch(school.getSchoolCategoryCode()) {
             case "PUBLIC":

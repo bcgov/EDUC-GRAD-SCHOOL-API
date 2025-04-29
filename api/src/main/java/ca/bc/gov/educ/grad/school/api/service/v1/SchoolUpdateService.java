@@ -7,11 +7,17 @@ import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEntity;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEventEntity;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolEventRepository;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolRepository;
+import ca.bc.gov.educ.grad.school.api.rest.RestUtils;
 import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.School;
+import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.SchoolGrade;
+import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.SchoolGradeSchoolHistory;
+import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.SchoolHistory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 
 
@@ -24,11 +30,13 @@ public class SchoolUpdateService extends BaseService<School> {
 
     private final GradSchoolEventRepository gradSchoolEventRepository;
     private final GradSchoolRepository gradSchoolRepository;
+    private final RestUtils restUtils;
 
-    public SchoolUpdateService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository) {
+    public SchoolUpdateService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository, RestUtils restUtils) {
         super(gradSchoolEventRepository);
         this.gradSchoolEventRepository = gradSchoolEventRepository;
         this.gradSchoolRepository = gradSchoolRepository;
+        this.restUtils = restUtils;
     }
 
     /**
@@ -41,6 +49,9 @@ public class SchoolUpdateService extends BaseService<School> {
         log.info("Received and processing event: " + event.getEventId());
 
         if(!school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")) {
+            var schoolHistory = restUtils.getSchoolHistoryPaginatedFromInstituteApi(school.getSchoolId());
+            var gradesHaveChanged = haveGradesChanged(school, schoolHistory);
+
             var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
             if (!optGradSchool.isPresent()) {
                 GradSchoolEntity newGradSchool = new GradSchoolEntity();
@@ -52,7 +63,7 @@ public class SchoolUpdateService extends BaseService<School> {
                 newGradSchool.setCreateDate(LocalDateTime.now());
                 newGradSchool.setUpdateUser(school.getCreateUser());
                 gradSchoolRepository.save(newGradSchool);
-            } else {
+            } else if(gradesHaveChanged) {
                 var gradSchool = optGradSchool.get();
                 setTranscriptAndCertificateFlags(school, gradSchool);
                 gradSchool.setUpdateDate(LocalDateTime.now());
@@ -63,6 +74,23 @@ public class SchoolUpdateService extends BaseService<School> {
         }
     }
 
+    private boolean haveGradesChanged(School school, Page<SchoolHistory> schoolHistory){
+        if(schoolHistory != null && !schoolHistory.isEmpty()) {
+            var schoolHistoryPrior = schoolHistory.stream().skip(1).findFirst().orElse(null);
+
+            if(schoolHistoryPrior == null){
+                return true;
+            }
+            var currentSchoolGrades = new java.util.ArrayList<>(school.getGrades().stream().map(SchoolGrade::getSchoolGradeCode).toList());
+            var priorSchoolGrades = new java.util.ArrayList<>(schoolHistoryPrior.getSchoolGrades().stream().map(SchoolGradeSchoolHistory::getSchoolGradeCode).toList());
+
+            Collections.sort(currentSchoolGrades);
+            Collections.sort(priorSchoolGrades);
+
+            return !currentSchoolGrades.equals(priorSchoolGrades);
+        }
+        return false;
+    }
 
     /**
      * Gets event type.
