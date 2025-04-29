@@ -135,8 +135,8 @@ class SchoolUpdateServiceTest {
         gradSchool.setCanIssueCertificates("N");
         gradSchool.setCreateUser("ABC");
         gradSchool.setUpdateUser("ABC");
-        gradSchool.setUpdateDate(LocalDateTime.now());
-        gradSchool.setCreateDate(LocalDateTime.now());
+        gradSchool.setUpdateDate(LocalDateTime.now().minusDays(1));
+        gradSchool.setCreateDate(LocalDateTime.now().minusDays(1));
 
         gradSchoolRepository.save(gradSchool);
 
@@ -200,8 +200,8 @@ class SchoolUpdateServiceTest {
         gradSchool.setCanIssueCertificates("N");
         gradSchool.setCreateUser("ABC");
         gradSchool.setUpdateUser("ABC");
-        gradSchool.setUpdateDate(LocalDateTime.now());
-        gradSchool.setCreateDate(LocalDateTime.now());
+        gradSchool.setUpdateDate(LocalDateTime.now().minusDays(1));
+        gradSchool.setCreateDate(LocalDateTime.now().minusDays(1));
 
         gradSchoolRepository.save(gradSchool);
 
