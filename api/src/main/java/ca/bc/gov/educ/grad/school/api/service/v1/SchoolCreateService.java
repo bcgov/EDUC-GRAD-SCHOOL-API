@@ -49,7 +49,7 @@ public class SchoolCreateService extends BaseService<School> {
             newGradSchool.setCreateUser(school.getCreateUser());
             newGradSchool.setUpdateDate(LocalDateTime.now());
             newGradSchool.setCreateDate(LocalDateTime.now());
-            newGradSchool.setUpdateUser(school.getCreateUser());
+            newGradSchool.setUpdateUser(school.getUpdateUser());
             gradSchoolRepository.save(newGradSchool);
         }else{
             log.info("Ignoring choreography update event with ID {} :: payload is: {} :: school already exists or is FED_BAND in the service", event.getEventId(), school);

@@ -62,16 +62,16 @@ public class SchoolUpdateService extends BaseService<School> {
                 setTranscriptAndCertificateFlags(school, newGradSchool);
                 newGradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
                 newGradSchool.setSubmissionModeCode(SubmissionModeCode.REPLACE.toString());
-                newGradSchool.setCreateUser(school.getCreateUser());
+                newGradSchool.setCreateUser(school.getUpdateUser());
                 newGradSchool.setUpdateDate(LocalDateTime.now());
                 newGradSchool.setCreateDate(LocalDateTime.now());
-                newGradSchool.setUpdateUser(school.getCreateUser());
+                newGradSchool.setUpdateUser(school.getUpdateUser());
                 gradSchoolRepository.save(newGradSchool);
             } else if(gradesHaveChanged) {
                 var gradSchool = optGradSchool.get();
                 setTranscriptAndCertificateFlags(school, gradSchool);
                 gradSchool.setUpdateDate(LocalDateTime.now());
-                gradSchool.setUpdateUser(school.getCreateUser());
+                gradSchool.setUpdateUser(school.getUpdateUser());
                 gradSchoolRepository.save(gradSchool);
             }
             this.updateEvent(event);
