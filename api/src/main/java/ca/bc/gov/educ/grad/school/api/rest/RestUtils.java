@@ -45,7 +45,7 @@ public class RestUtils {
               .uri(getSchoolHistoryURI(criterion))
               .header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
               .retrieve()
-              .bodyToMono(new ParameterizedTypeReference<Page<SchoolHistory>>() {})
+              .bodyToMono(new ParameterizedTypeReference<RestResponsePage<SchoolHistory>>() {})
               .block();
     } catch (Exception ex) {
       log.error("Error fetching school history on page {} {}", 0, ex);
