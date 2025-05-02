@@ -1,3 +1,5 @@
+--Export TAB_SCHOOL from GRAD_TRAX_API to the Migration schema
+
 CREATE TABLE DISTRICT
 (
     district_id          VARCHAR(40)  NOT NULL,
