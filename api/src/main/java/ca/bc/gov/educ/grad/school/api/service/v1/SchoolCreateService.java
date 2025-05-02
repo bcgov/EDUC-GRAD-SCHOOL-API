@@ -10,6 +10,8 @@ import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolRepository;
 import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.School;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -39,6 +41,7 @@ public class SchoolCreateService extends BaseService<School> {
      * @param event the event
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void processEvent(final School school, final GradSchoolEventEntity event) {
         log.info("Received and processing event: " + event.getEventId());
 
