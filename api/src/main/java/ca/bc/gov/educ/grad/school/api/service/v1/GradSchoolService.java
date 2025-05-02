@@ -111,7 +111,7 @@ public class GradSchoolService {
   private GradSchoolEntity saveGradSchoolWithHistory(GradSchoolEntity currentGradSchoolEntity) {
     TransformUtil.uppercaseFields(currentGradSchoolEntity); // convert the input to upper case.
     GradSchoolEntity savedSchool = gradSchoolRepository.save(currentGradSchoolEntity);
-    gradSchoolHistoryService.createSchoolHistory(savedSchool, savedSchool.getUpdateUser());
+    gradSchoolHistoryService.createSchoolHistory(savedSchool);
 
     return savedSchool;
   }

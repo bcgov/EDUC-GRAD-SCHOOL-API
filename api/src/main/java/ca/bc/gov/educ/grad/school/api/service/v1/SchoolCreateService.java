@@ -24,11 +24,13 @@ public class SchoolCreateService extends BaseService<School> {
 
     private final GradSchoolEventRepository gradSchoolEventRepository;
     private final GradSchoolRepository gradSchoolRepository;
+    private final GradSchoolHistoryService gradSchoolHistoryService;
 
-    public SchoolCreateService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository) {
+    public SchoolCreateService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository, GradSchoolHistoryService gradSchoolHistoryService) {
         super(gradSchoolEventRepository);
         this.gradSchoolEventRepository = gradSchoolEventRepository;
         this.gradSchoolRepository = gradSchoolRepository;
+        this.gradSchoolHistoryService = gradSchoolHistoryService;
     }
 
     /**
@@ -41,7 +43,7 @@ public class SchoolCreateService extends BaseService<School> {
         log.info("Received and processing event: " + event.getEventId());
 
         var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
-        if(!optGradSchool.isPresent() && !school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")) {
+        if(optGradSchool.isEmpty() && !school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")) {
             GradSchoolEntity newGradSchool = new GradSchoolEntity();
             setTranscriptAndCertificateFlags(school, newGradSchool);
             newGradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
@@ -51,6 +53,7 @@ public class SchoolCreateService extends BaseService<School> {
             newGradSchool.setCreateDate(LocalDateTime.now());
             newGradSchool.setUpdateUser(school.getUpdateUser());
             gradSchoolRepository.save(newGradSchool);
+            gradSchoolHistoryService.createSchoolHistory(newGradSchool);
         }else{
             log.info("Ignoring choreography update event with ID {} :: payload is: {} :: school already exists or is FED_BAND in the service", event.getEventId(), school);
         }

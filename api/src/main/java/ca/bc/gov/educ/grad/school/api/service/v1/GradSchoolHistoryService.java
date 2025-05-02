@@ -24,12 +24,12 @@ public class GradSchoolHistoryService {
   }
 
   @Transactional(propagation = Propagation.MANDATORY)
-  public void createSchoolHistory(GradSchoolEntity curGradSchoolEntity, String updateUser) {
+  public void createSchoolHistory(GradSchoolEntity curGradSchoolEntity) {
     final GradSchoolHistoryEntity gradSchoolHistoryEntity = new GradSchoolHistoryEntity();
     BeanUtils.copyProperties(curGradSchoolEntity, gradSchoolHistoryEntity);
-    gradSchoolHistoryEntity.setCreateUser(updateUser);
+    gradSchoolHistoryEntity.setCreateUser(curGradSchoolEntity.getCreateUser());
     gradSchoolHistoryEntity.setCreateDate(LocalDateTime.now());
-    gradSchoolHistoryEntity.setUpdateUser(updateUser);
+    gradSchoolHistoryEntity.setUpdateUser(curGradSchoolEntity.getUpdateUser());
     gradSchoolHistoryEntity.setUpdateDate(LocalDateTime.now());
     gradSchoolHistoryRepository.save(gradSchoolHistoryEntity);
   }

@@ -7,6 +7,7 @@ import ca.bc.gov.educ.grad.school.api.exception.GradSchoolAPIRuntimeException;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEntity;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEventEntity;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolEventRepository;
+import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolHistoryRepository;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolRepository;
 import ca.bc.gov.educ.grad.school.api.rest.RestUtils;
 import ca.bc.gov.educ.grad.school.api.struct.v1.external.institute.School;
@@ -31,12 +32,14 @@ public class SchoolUpdateService extends BaseService<School> {
 
     private final GradSchoolEventRepository gradSchoolEventRepository;
     private final GradSchoolRepository gradSchoolRepository;
+    private final GradSchoolHistoryService gradSchoolHistoryService;
     private final RestUtils restUtils;
 
-    public SchoolUpdateService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository, RestUtils restUtils) {
+    public SchoolUpdateService(GradSchoolEventRepository gradSchoolEventRepository, GradSchoolRepository gradSchoolRepository, GradSchoolHistoryService gradSchoolHistoryService, RestUtils restUtils) {
         super(gradSchoolEventRepository);
         this.gradSchoolEventRepository = gradSchoolEventRepository;
         this.gradSchoolRepository = gradSchoolRepository;
+        this.gradSchoolHistoryService = gradSchoolHistoryService;
         this.restUtils = restUtils;
     }
 
@@ -57,7 +60,7 @@ public class SchoolUpdateService extends BaseService<School> {
             var gradesHaveChanged = haveGradesChanged(school, schoolHistory);
 
             var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
-            if (!optGradSchool.isPresent()) {
+            if (optGradSchool.isEmpty()) {
                 GradSchoolEntity newGradSchool = new GradSchoolEntity();
                 setTranscriptAndCertificateFlags(school, newGradSchool);
                 newGradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
@@ -67,12 +70,14 @@ public class SchoolUpdateService extends BaseService<School> {
                 newGradSchool.setCreateDate(LocalDateTime.now());
                 newGradSchool.setUpdateUser(school.getUpdateUser());
                 gradSchoolRepository.save(newGradSchool);
+                gradSchoolHistoryService.createSchoolHistory(newGradSchool);
             } else if(gradesHaveChanged) {
                 var gradSchool = optGradSchool.get();
                 setTranscriptAndCertificateFlags(school, gradSchool);
                 gradSchool.setUpdateDate(LocalDateTime.now());
                 gradSchool.setUpdateUser(school.getUpdateUser());
                 gradSchoolRepository.save(gradSchool);
+                gradSchoolHistoryService.createSchoolHistory(gradSchool);
             }
             this.updateEvent(event);
         }
