@@ -50,9 +50,8 @@ public class JetStreamEventScheduler {
   @SchedulerLock(name = "PROCESS_CHOREOGRAPHED_EVENTS_FROM_JET_STREAM", lockAtLeastFor = "${cron.scheduled.process.events.stan.lockAtLeastFor}", lockAtMostFor = "${cron.scheduled.process.events.stan.lockAtMostFor}")
   public void findAndProcessEvents() {
     LockAssert.assertLocked();
-    var instituteEventTypes = Arrays.asList(EventType.CREATE_SCHOOL.toString(), EventType.UPDATE_SCHOOL.toString());
-    LockAssert.assertLocked();
-    var results = eventRepository.findByEventStatusAndEventTypeNotIn(DB_COMMITTED.toString(), instituteEventTypes);
+    var gradSchoolEventTypes = Arrays.asList(EventType.UPDATE_GRAD_SCHOOL.toString());
+    var results = eventRepository.findByEventStatusAndEventTypeIn(DB_COMMITTED.toString(), gradSchoolEventTypes);
     if (!results.isEmpty()) {
       results.forEach(el -> {
         if (el.getUpdateDate().isBefore(LocalDateTime.now().minusMinutes(5))) {
@@ -65,7 +64,7 @@ public class JetStreamEventScheduler {
       });
     }
 
-    final var resultsForIncoming = this.eventRepository.findAllByEventStatusAndCreateDateBeforeAndEventTypeInOrderByCreateDate(DB_COMMITTED.toString(), LocalDateTime.now().minusMinutes(1), 500, instituteEventTypes);
+    final var resultsForIncoming = this.eventRepository.findAllByEventStatusAndCreateDateBeforeAndEventTypeNotInOrderByCreateDate(DB_COMMITTED.toString(), LocalDateTime.now().minusMinutes(1), 500, gradSchoolEventTypes);
     if (!results.isEmpty()) {
       log.info("Found {} grad school choreographed events which needs to be processed.", resultsForIncoming.size());
       resultsForIncoming.forEach(this.choreographer::handleEvent);
