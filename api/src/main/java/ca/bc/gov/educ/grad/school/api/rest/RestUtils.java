@@ -12,6 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
 
 /**
  * This class is used for REST calls
@@ -33,18 +36,13 @@ public class RestUtils {
     this.props = props;
   }
 
-
   public Page<SchoolHistory> getSchoolHistoryPaginatedFromInstituteApi(String schoolID) {
-    int pageSize = Integer.parseInt(PAGE_SIZE_VALUE);
     try {
-      String fullUrl = this.props.getInstituteApiURL()
-              + "/school/history/paginated"
-              + "?pageNumber=" + 0
-              + "&pageSize=" + pageSize
-              + "&sort={\"createDate\":\"DESC\"}"
-              + "&searchCriteriaList=[{\"condition\":null,\"searchCriteriaList\":[{\"key\":\"schoolId\",\"value\":\"" + schoolID + "\",\"operation\":\"eq\",\"valueType\":\"UUID\"}]";
+      String criterion = "[{\"condition\":null,\"searchCriteriaList\":[" +
+              "{\"key\":\"schoolId\",\"operation\":\"eq\",\"value\":\"" + schoolID + "\",\"valueType\":\"UUID\",\"condition\":\"AND\"}," +
+              "]}]";
       return webClient.get()
-              .uri(fullUrl)
+              .uri(getSchoolHistoryURI(criterion))
               .header(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
               .retrieve()
               .bodyToMono(new ParameterizedTypeReference<Page<SchoolHistory>>() {})
@@ -53,5 +51,13 @@ public class RestUtils {
       log.error("Error fetching school history on page {} {}", 0, ex);
       throw new GradSchoolAPIRuntimeException("Error fetching school history on page 0  " + ex.getMessage());
     }
+  }
+
+  private URI getSchoolHistoryURI(String criterion){
+    return UriComponentsBuilder.fromHttpUrl(this.props.getInstituteApiURL() + "/school/history/paginated")
+            .queryParam("pageNumber", "0")
+            .queryParam("pageSize", PAGE_SIZE_VALUE)
+            .queryParam("sort", "{\"createDate\":\"DESC\"}")
+            .queryParam("searchCriteriaList", criterion).build().toUri();
   }
 }
