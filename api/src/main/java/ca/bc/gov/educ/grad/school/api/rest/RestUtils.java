@@ -39,7 +39,7 @@ public class RestUtils {
   public Page<SchoolHistory> getSchoolHistoryPaginatedFromInstituteApi(String schoolID) {
     try {
       String criterion = "[{\"condition\":null,\"searchCriteriaList\":[" +
-              "{\"key\":\"schoolId\",\"operation\":\"eq\",\"value\":\"" + schoolID + "\",\"valueType\":\"UUID\",\"condition\":\"AND\"}," +
+              "{\"key\":\"schoolId\",\"operation\":\"eq\",\"value\":\"" + schoolID + "\",\"valueType\":\"UUID\",\"condition\":\"AND\"}" +
               "]}]";
       return webClient.get()
               .uri(getSchoolHistoryURI(criterion))

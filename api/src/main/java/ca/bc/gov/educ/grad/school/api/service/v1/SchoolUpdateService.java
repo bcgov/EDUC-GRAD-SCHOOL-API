@@ -3,6 +3,7 @@ package ca.bc.gov.educ.grad.school.api.service.v1;
 
 import ca.bc.gov.educ.grad.school.api.constants.v1.EventType;
 import ca.bc.gov.educ.grad.school.api.constants.v1.SubmissionModeCode;
+import ca.bc.gov.educ.grad.school.api.exception.GradSchoolAPIRuntimeException;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEntity;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEventEntity;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolEventRepository;
@@ -50,6 +51,9 @@ public class SchoolUpdateService extends BaseService<School> {
 
         if(!school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")) {
             var schoolHistory = restUtils.getSchoolHistoryPaginatedFromInstituteApi(school.getSchoolId());
+            if(schoolHistory.isEmpty()){
+                throw new GradSchoolAPIRuntimeException("School history cannot be empty - this should not have happened");
+            }
             var gradesHaveChanged = haveGradesChanged(school, schoolHistory);
 
             var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
