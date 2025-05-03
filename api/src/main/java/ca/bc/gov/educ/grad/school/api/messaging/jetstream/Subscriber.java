@@ -1,9 +1,11 @@
 package ca.bc.gov.educ.grad.school.api.messaging.jetstream;
 
 
+import ca.bc.gov.educ.grad.school.api.constants.v1.EventType;
 import ca.bc.gov.educ.grad.school.api.helpers.LogHelper;
 import ca.bc.gov.educ.grad.school.api.properties.ApplicationProperties;
 import ca.bc.gov.educ.grad.school.api.service.v1.EventHandlerDelegatorService;
+import ca.bc.gov.educ.grad.school.api.service.v1.JetStreamEventHandlerService;
 import ca.bc.gov.educ.grad.school.api.struct.v1.ChoreographedEvent;
 import ca.bc.gov.educ.grad.school.api.util.JsonUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -41,12 +43,14 @@ public class Subscriber {
     private final Executor subscriberExecutor = new EnhancedQueueExecutor.Builder()
             .setThreadFactory(new ThreadFactoryBuilder().setNameFormat("jet-stream-subscriber-%d").build())
             .setCorePoolSize(2).setMaximumPoolSize(2).setKeepAliveTime(Duration.ofMillis(1000)).build();
-    private final Map<String, List<String>> streamTopicsMap = new HashMap<>(); // one stream can have multiple topics.
+    private final Map<String, List<String>> streamTopicsMap = new HashMap<>();
+    private final JetStreamEventHandlerService jetStreamEventHandlerService;// one stream can have multiple topics.
 
     @Autowired
-    public Subscriber(final Connection natsConnection, EventHandlerDelegatorService eventHandlerDelegatorService) {
+    public Subscriber(final Connection natsConnection, EventHandlerDelegatorService eventHandlerDelegatorService, JetStreamEventHandlerService jetStreamEventHandlerService) {
         this.eventHandlerDelegatorService = eventHandlerDelegatorService;
         this.natsConnection = natsConnection;
+        this.jetStreamEventHandlerService = jetStreamEventHandlerService;
         this.initializeStreamTopicMap();
     }
 
@@ -88,7 +92,12 @@ public class Subscriber {
                 }
                 this.subscriberExecutor.execute(() -> {
                     try {
-                        this.eventHandlerDelegatorService.handleEvent(event, message);
+                        if(!event.getEventType().equals(EventType.UPDATE_GRAD_SCHOOL)) {
+                            this.eventHandlerDelegatorService.handleEvent(event, message);
+                        }else{
+                            jetStreamEventHandlerService.updateEventStatus(event);
+                            log.info("Received event :: {} ", event);
+                        }
                     } catch (final IOException e) {
                         log.error("IOException ", e);
                     }
