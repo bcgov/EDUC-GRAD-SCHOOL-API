@@ -58,8 +58,11 @@ public class Subscriber {
      * this is the source of truth for all the topics this api subscribes to.
      */
     private void initializeStreamTopicMap() {
+        final List<String> gradSchoolEventsTopics = new ArrayList<>();
+        gradSchoolEventsTopics.add("GRAD_SCHOOL_EVENTS_TOPIC");
         final List<String> instituteEventsTopics = new ArrayList<>();
         instituteEventsTopics.add("INSTITUTE_EVENTS_TOPIC");
+        this.streamTopicsMap.put("GRAD_SCHOOL_EVENTS", gradSchoolEventsTopics);
         this.streamTopicsMap.put("INSTITUTE_EVENTS", instituteEventsTopics);
     }
 
