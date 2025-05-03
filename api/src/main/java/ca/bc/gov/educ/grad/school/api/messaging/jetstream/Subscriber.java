@@ -97,6 +97,7 @@ public class Subscriber {
                         }else{
                             jetStreamEventHandlerService.updateEventStatus(event);
                             log.info("Received event :: {} ", event);
+                            message.ack();
                         }
                     } catch (final IOException e) {
                         log.error("IOException ", e);
