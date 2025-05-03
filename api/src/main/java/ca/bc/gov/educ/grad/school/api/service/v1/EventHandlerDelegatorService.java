@@ -33,7 +33,6 @@ public class EventHandlerDelegatorService {
         this.choreographer = choreographer;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleEvent(@NonNull final ChoreographedEvent choreographedEvent, final Message message) throws IOException {
         try {
             final var persistedEvent = this.choreographedEventPersistenceService.persistEventToDB(choreographedEvent);

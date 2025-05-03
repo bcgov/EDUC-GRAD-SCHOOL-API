@@ -47,7 +47,6 @@ public class ChoreographEventHandler {
      *
      * @param event the event
      */
-    @Transactional(propagation = Propagation.MANDATORY)
     public void handleEvent(@NonNull final GradSchoolEventEntity event) {
         //only one thread will process all the request. since RDB won't handle concurrent requests.
         this.singleTaskExecutor.execute(() -> {

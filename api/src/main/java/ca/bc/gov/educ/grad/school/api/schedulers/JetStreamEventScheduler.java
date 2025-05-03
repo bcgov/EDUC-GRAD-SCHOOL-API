@@ -50,7 +50,6 @@ public class JetStreamEventScheduler {
    */
   @Scheduled(cron = "${cron.scheduled.process.events.stan}") // every 5 minutes
   @SchedulerLock(name = "PROCESS_CHOREOGRAPHED_EVENTS_FROM_JET_STREAM", lockAtLeastFor = "${cron.scheduled.process.events.stan.lockAtLeastFor}", lockAtMostFor = "${cron.scheduled.process.events.stan.lockAtMostFor}")
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void findAndProcessEvents() {
     LockAssert.assertLocked();
     log.info("Fired jet stream choreography scheduler");

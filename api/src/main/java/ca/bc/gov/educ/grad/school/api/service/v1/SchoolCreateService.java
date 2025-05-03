@@ -41,7 +41,7 @@ public class SchoolCreateService extends BaseService<School> {
      * @param event the event
      */
     @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void processEvent(final School school, final GradSchoolEventEntity event) {
         log.info("Received and processing event: " + event.getEventId());
 
