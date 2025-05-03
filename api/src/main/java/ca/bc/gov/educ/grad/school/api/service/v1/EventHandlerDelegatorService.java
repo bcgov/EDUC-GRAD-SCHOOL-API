@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -31,6 +33,7 @@ public class EventHandlerDelegatorService {
         this.choreographer = choreographer;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleEvent(@NonNull final ChoreographedEvent choreographedEvent, final Message message) throws IOException {
         try {
             final var persistedEvent = this.choreographedEventPersistenceService.persistEventToDB(choreographedEvent);
