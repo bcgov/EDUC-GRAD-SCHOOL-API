@@ -3,16 +3,24 @@ package ca.bc.gov.educ.grad.school.api.controller.v1;
 import ca.bc.gov.educ.grad.school.api.endpoint.v1.GradSchoolAPIEndpoint;
 import ca.bc.gov.educ.grad.school.api.mapper.v1.GradSchoolMapper;
 import ca.bc.gov.educ.grad.school.api.messaging.jetstream.Publisher;
+import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolHistoryEntity;
+import ca.bc.gov.educ.grad.school.api.service.v1.GradSchoolHistorySearchService;
 import ca.bc.gov.educ.grad.school.api.service.v1.GradSchoolHistoryService;
 import ca.bc.gov.educ.grad.school.api.service.v1.GradSchoolService;
 import ca.bc.gov.educ.grad.school.api.struct.v1.GradSchool;
 import ca.bc.gov.educ.grad.school.api.struct.v1.GradSchoolHistory;
+import ca.bc.gov.educ.grad.school.api.util.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Slf4j
@@ -26,10 +34,13 @@ public class GradSchoolAPIController implements GradSchoolAPIEndpoint {
 
   private final GradSchoolHistoryService gradSchoolHistoryService;
 
-  public GradSchoolAPIController(Publisher publisher, GradSchoolService gradSchoolService, GradSchoolHistoryService gradSchoolHistoryService) {
+  private final GradSchoolHistorySearchService gradSchoolHistorySearchService;
+
+  public GradSchoolAPIController(Publisher publisher, GradSchoolService gradSchoolService, GradSchoolHistoryService gradSchoolHistoryService, GradSchoolHistorySearchService gradSchoolHistorySearchService) {
       this.publisher = publisher;
       this.gradSchoolService = gradSchoolService;
       this.gradSchoolHistoryService = gradSchoolHistoryService;
+      this.gradSchoolHistorySearchService = gradSchoolHistorySearchService;
   }
 
   @Override
@@ -67,6 +78,14 @@ public class GradSchoolAPIController implements GradSchoolAPIEndpoint {
   @Override
   public List<GradSchool> getAllGradSchools() {
     return gradSchoolService.getAllGradSchoolsList().stream().map(mapper::toStructure).toList();
+  }
+
+  @Override
+  public CompletableFuture<Page<GradSchoolHistory>> schoolHistoryFindAll(Integer pageNumber, Integer pageSize, String sortCriteriaJson, String searchCriteriaListJson) {
+    final List<Sort.Order> sorts = new ArrayList<>();
+    Specification<GradSchoolHistoryEntity> schoolHistorySpecs = gradSchoolHistorySearchService.setSpecificationAndSortCriteria(sortCriteriaJson, searchCriteriaListJson, JsonUtil.mapper, sorts);
+    return this.gradSchoolHistorySearchService.findAll(schoolHistorySpecs, pageNumber, pageSize, sorts).thenApplyAsync(schoolHistoryEntities -> schoolHistoryEntities.map(mapper::toStructure));
+
   }
 
 }
