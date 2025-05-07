@@ -83,4 +83,6 @@ public class SchoolHistory extends BaseRequest implements Serializable {
   @Valid
   private List<SchoolGradeSchoolHistory> schoolGrades;
 
+  @Valid
+  private List<IndependentSchoolFundingGroupHistory> schoolFundingGroups;
 }
