@@ -3,6 +3,7 @@ package ca.bc.gov.educ.grad.school.api.choreographer;
 
 import ca.bc.gov.educ.grad.school.api.constants.v1.EventStatus;
 import ca.bc.gov.educ.grad.school.api.constants.v1.EventType;
+import ca.bc.gov.educ.grad.school.api.messaging.jetstream.Publisher;
 import ca.bc.gov.educ.grad.school.api.model.v1.GradSchoolEventEntity;
 import ca.bc.gov.educ.grad.school.api.repository.v1.GradSchoolEventRepository;
 import ca.bc.gov.educ.grad.school.api.service.v1.EventService;
@@ -35,9 +36,11 @@ public class ChoreographEventHandler {
             .setCorePoolSize(2).setMaximumPoolSize(2).build();
     private final Map<String, EventService<?>> eventServiceMap;
     private final GradSchoolEventRepository gradSchoolEventRepository;
+    private final Publisher publisher;
 
-    public ChoreographEventHandler(final List<EventService<?>> eventServices, GradSchoolEventRepository gradSchoolEventRepository) {
+    public ChoreographEventHandler(final List<EventService<?>> eventServices, GradSchoolEventRepository gradSchoolEventRepository, Publisher publisher) {
         this.gradSchoolEventRepository = gradSchoolEventRepository;
+        this.publisher = publisher;
         this.eventServiceMap = new HashMap<>();
         eventServices.forEach(eventService -> this.eventServiceMap.put(eventService.getEventType(), eventService));
     }
@@ -60,12 +63,18 @@ public class ChoreographEventHandler {
                             case "CREATE_SCHOOL":
                                 val studentCreate = JsonUtil.getJsonObjectFromString(School.class, event.getEventPayload());
                                 final EventService<School> studentCreateEventService = (EventService<School>) this.eventServiceMap.get(EventType.CREATE_SCHOOL.toString());
-                                studentCreateEventService.processEvent(studentCreate, event);
+                                var gradCreateEvent = studentCreateEventService.processEvent(studentCreate, event);
+                                if(gradCreateEvent != null) {
+                                    publisher.dispatchChoreographyEvent(gradCreateEvent);
+                                }
                                 break;
                             case "UPDATE_SCHOOL":
                                 val studentUpdate = JsonUtil.getJsonObjectFromString(School.class, event.getEventPayload());
                                 final EventService<School> studentUpdateEventService = (EventService<School>) this.eventServiceMap.get(EventType.UPDATE_SCHOOL.toString());
-                                studentUpdateEventService.processEvent(studentUpdate, event);
+                                var gradUpdateEvent = studentUpdateEventService.processEvent(studentUpdate, event);
+                                if(gradUpdateEvent != null) {
+                                    publisher.dispatchChoreographyEvent(gradUpdateEvent);
+                                }
                                 break;
                             default:
                                 log.warn("Silently ignoring event: {}", event);

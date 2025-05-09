@@ -15,7 +15,7 @@ public interface EventService<T> {
    * @param request the request
    * @param event   the event
    */
-  void processEvent(T request, GradSchoolEventEntity event);
+  GradSchoolEventEntity processEvent(T request, GradSchoolEventEntity event);
 
   /**
    * Gets event type.
