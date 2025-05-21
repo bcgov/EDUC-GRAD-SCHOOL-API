@@ -25,9 +25,9 @@ env:
   CHES_ENDPOINT_URL: ${{ secrets.CHES_ENDPOINT_URL }}
   EDX_URL: ${{ secrets.EDX_URL }}
 
-  IMAGE_TAGS: grad-data-collection-api-master
+  IMAGE_TAGS: grad-school-api-master
 
-  SPRING_BOOT_IMAGE_NAME: grad-data-collection-api-master
+  SPRING_BOOT_IMAGE_NAME: grad-school-api-master
   DOCKER_ARTIFACTORY_REPO: artifacts.developer.gov.bc.ca/docker-remote
   ARTIFACTORY_REPO: artifacts.developer.gov.bc.ca
 
