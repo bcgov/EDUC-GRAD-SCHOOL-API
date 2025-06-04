@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -67,6 +68,7 @@ class SchoolUpdateServiceTest {
         school.setSchoolId(UUID.randomUUID().toString());
         school.setGrades(Arrays.asList(grade2, grade1));
         school.setSchoolCategoryCode("ABC");
+        school.setSchoolFundingGroups(new ArrayList<>());
 
         GradSchoolEntity gradSchool = new GradSchoolEntity();
         gradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
@@ -101,7 +103,7 @@ class SchoolUpdateServiceTest {
         gradeSH4.setSchoolGradeCode("GRADE02");
         hist2.setSchoolId(UUID.randomUUID().toString());
         hist2.setSchoolGrades(Arrays.asList(gradeSH3, gradeSH4));
-
+        hist2.setSchoolFundingGroups(new ArrayList<>());
         var data = Arrays.asList(hist1, hist2);
 
         Page<SchoolHistory> page = new PageImpl<>(data);
@@ -127,6 +129,7 @@ class SchoolUpdateServiceTest {
         school.setSchoolId(UUID.randomUUID().toString());
         school.setGrades(Arrays.asList(grade3, grade1));
         school.setSchoolCategoryCode("ABC");
+        school.setSchoolFundingGroups(new ArrayList<>());
 
         GradSchoolEntity gradSchool = new GradSchoolEntity();
         gradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
@@ -161,7 +164,7 @@ class SchoolUpdateServiceTest {
         gradeSH4.setSchoolGradeCode("GRADE02");
         hist2.setSchoolId(UUID.randomUUID().toString());
         hist2.setSchoolGrades(Arrays.asList(gradeSH3, gradeSH4));
-
+        hist2.setSchoolFundingGroups(new ArrayList<>());
         var data = Arrays.asList(hist1, hist2);
 
         Page<SchoolHistory> page = new PageImpl<>(data);
@@ -226,6 +229,7 @@ class SchoolUpdateServiceTest {
         gradeSH4.setSchoolGradeCode("GRADE02");
         hist2.setSchoolId(UUID.randomUUID().toString());
         hist2.setSchoolGrades(Arrays.asList(gradeSH3, gradeSH4));
+        hist2.setSchoolFundingGroups(new ArrayList<>());
 
         var data = Arrays.asList(hist1, hist2);
 
