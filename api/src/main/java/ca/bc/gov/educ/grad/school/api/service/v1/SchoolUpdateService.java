@@ -2,6 +2,7 @@ package ca.bc.gov.educ.grad.school.api.service.v1;
 
 
 import ca.bc.gov.educ.grad.school.api.constants.v1.EventOutcome;
+import ca.bc.gov.educ.grad.school.api.constants.v1.EventStatus;
 import ca.bc.gov.educ.grad.school.api.constants.v1.EventType;
 import ca.bc.gov.educ.grad.school.api.constants.v1.SubmissionModeCode;
 import ca.bc.gov.educ.grad.school.api.exception.GradSchoolAPIRuntimeException;
@@ -107,8 +108,14 @@ public class SchoolUpdateService extends BaseService<School> {
 
                 this.updateEvent(event);
                 return gradSchoolEventEntity;
+            }else{
+                log.warn("Silently ignoring event due to school type: {}", event);
+                this.gradSchoolEventRepository.findByEventId(event.getEventId()).ifPresent(existingEvent -> {
+                    existingEvent.setEventStatus(EventStatus.PROCESSED.toString());
+                    existingEvent.setUpdateDate(LocalDateTime.now());
+                    this.gradSchoolEventRepository.save(existingEvent);
+                });
             }
-
         } catch (JsonProcessingException e) {
             throw new GradSchoolAPIRuntimeException(e.getMessage());
         }
