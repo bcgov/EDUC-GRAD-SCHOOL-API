@@ -57,9 +57,14 @@ public class SchoolCreateService extends BaseService<School> {
             log.info("Received and processing event: " + event.getEventId());
 
             var optGradSchool = gradSchoolRepository.findBySchoolID(UUID.fromString(school.getSchoolId()));
-            if(optGradSchool.isEmpty() && !school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")) {
+            if(optGradSchool.isEmpty()) {
                 GradSchoolEntity newGradSchool = new GradSchoolEntity();
-                setTranscriptAndCertificateFlags(school, newGradSchool);
+                if(school.getSchoolCategoryCode().equalsIgnoreCase("FED_BAND")){
+                    newGradSchool.setCanIssueCertificates("N");
+                    newGradSchool.setCanIssueTranscripts("N");
+                }else{
+                    setTranscriptAndCertificateFlags(school, newGradSchool);
+                }
                 newGradSchool.setSchoolID(UUID.fromString(school.getSchoolId()));
                 newGradSchool.setSubmissionModeCode(SubmissionModeCode.REPLACE.toString());
                 newGradSchool.setCreateUser(school.getCreateUser());
@@ -73,7 +78,7 @@ public class SchoolCreateService extends BaseService<School> {
                         JsonUtil.getJsonStringFromObject(gradSchoolMapper.toStructure(newGradSchool)),
                         UPDATE_GRAD_SCHOOL, EventOutcome.GRAD_SCHOOL_UPDATED);
             }else{
-                log.info("Ignoring choreography update event with ID {} :: payload is: {} :: school already exists or is FED_BAND in the service", event.getEventId(), school);
+                log.info("Ignoring choreography create event with ID {} :: payload is: {} :: school already exists or is FED_BAND in the service", event.getEventId(), school);
             }
             this.updateEvent(event);
         } catch (JsonProcessingException e) {
