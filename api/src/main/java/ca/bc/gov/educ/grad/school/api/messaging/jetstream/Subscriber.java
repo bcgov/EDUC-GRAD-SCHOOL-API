@@ -2,12 +2,13 @@ package ca.bc.gov.educ.grad.school.api.messaging.jetstream;
 
 
 import ca.bc.gov.educ.grad.school.api.constants.v1.EventType;
+import ca.bc.gov.educ.grad.school.api.exception.IgnoreEventException;
 import ca.bc.gov.educ.grad.school.api.helpers.LogHelper;
 import ca.bc.gov.educ.grad.school.api.properties.ApplicationProperties;
 import ca.bc.gov.educ.grad.school.api.service.v1.EventHandlerDelegatorService;
 import ca.bc.gov.educ.grad.school.api.service.v1.JetStreamEventHandlerService;
 import ca.bc.gov.educ.grad.school.api.struct.v1.ChoreographedEvent;
-import ca.bc.gov.educ.grad.school.api.util.JsonUtil;
+import ca.bc.gov.educ.grad.school.api.util.EventUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.nats.client.Connection;
 import io.nats.client.JetStreamApiException;
@@ -87,7 +88,7 @@ public class Subscriber {
             try {
                 val eventString = new String(message.getData());
                 LogHelper.logMessagingEventDetails(eventString);
-                final ChoreographedEvent event = JsonUtil.getJsonObjectFromString(ChoreographedEvent.class, eventString);
+                final ChoreographedEvent event = EventUtils.getChoreographedEventIfValid(eventString);
                 if (event.getEventPayload() == null) {
                     message.ack();
                     log.warn("payload is null, ignoring event :: {}", event);
@@ -107,6 +108,9 @@ public class Subscriber {
                     }
                 });
                 log.info("received event :: {} ", event);
+            } catch (final IgnoreEventException ex) {
+                log.warn("Ignoring event with type :: {} :: and event outcome :: {}", ex.getEventType(), ex.getEventOutcome());
+                message.ack();
             } catch (final Exception ex) {
                 log.error("Exception ", ex);
             }
